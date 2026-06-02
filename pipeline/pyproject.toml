@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-tool-multi-agent"
+version = "0.2.0"
+description = "Tool-augmented LLM multi-agent pathway for AAS pre-CTA triage (self-contained layout)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "pandas>=1.5",
+  "numpy>=1.23",
+  "lightgbm>=4.0",
+]
+
+[project.optional-dependencies]
+torch = ["torch>=2.0"]
+metrics = ["scikit-learn>=1.2"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

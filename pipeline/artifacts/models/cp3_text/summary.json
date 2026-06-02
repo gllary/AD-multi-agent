@@ -1,0 +1,11 @@
+{
+  "datasetA_n": 1032,
+  "datasetB_v6_n": 176,
+  "datasetA_oof_auroc": 0.6949884760139415,
+  "datasetA_oof_auprc": 0.7010719230096415,
+  "datasetB_v6_holdout_auroc": 0.6411327156466136,
+  "datasetB_v6_holdout_auprc": 0.540812897663293,
+  "n_features": 46,
+  "n_categorical_expanded": 21,
+  "n_numeric": 25
+}

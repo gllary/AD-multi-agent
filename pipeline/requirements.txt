@@ -1,0 +1,16 @@
+# Runtime pip dependencies for the 720-visit Phase 1 run.
+# Tested against Python 3.10+ (3.12 recommended).
+
+# Core scientific
+pandas>=1.5
+numpy>=1.23
+scipy>=1.10
+
+# LightGBM (fold boosters in artifacts/models/lgbm/)
+lightgbm>=4.0
+
+# scikit-learn (used by run_pathway._metrics for AUROC / AUPRC)
+scikit-learn>=1.2
+
+# LLM client (Qwen via OpenAI-compatible gateway, see llm_client.py)
+openai>=1.0
