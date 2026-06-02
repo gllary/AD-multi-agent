@@ -14,6 +14,45 @@ It keeps only materials aligned with the current manuscript narrative:
 
 It intentionally excludes historical exploratory runs, obsolete figure sets, unrestricted validation-cohort raw data, LLM call logs, cache files, pycache files, and intermediate output directories.
 
+## Related Article
+
+This code release is associated with the manuscript:
+
+**Safety-governed multi-agent pathway control for suspected acute aortic syndrome: a retrospective external evaluation**
+
+Manuscript materials included in this bundle:
+
+- `manuscript_materials/safety-governed-multi-agent-aas-triage.tex`
+- `manuscript_materials/safety-governed-multi-agent-aas-triage-supplement.tex`
+- `manuscript_materials/supplementary_file_1_frozen_prompt_templates_phi_stripped.txt`
+
+Article status: manuscript/submission draft; journal, DOI, and final citation information are pending. Please update this section after acceptance or public preprint posting.
+
+Suggested citation before DOI assignment:
+
+```text
+Authors. Safety-governed multi-agent pathway control for suspected acute aortic syndrome:
+a retrospective external evaluation. Manuscript in preparation/submission, 2026.
+Code release: AAS_Code.
+```
+
+BibTeX placeholder:
+
+```bibtex
+@unpublished{aas_pathway_control_2026,
+  title  = {Safety-governed multi-agent pathway control for suspected acute aortic syndrome: a retrospective external evaluation},
+  author = {Authors},
+  year   = {2026},
+  note   = {Manuscript in preparation/submission; code release: AAS\_Code}
+}
+```
+
+## License
+
+Source code in `pipeline/` and `analysis/` is released under the MIT License. See `LICENSE`.
+
+The de-identified Cohort D files in `data/` and manuscript/prompt materials in `manuscript_materials/` are provided to support research transparency and reproducibility for the associated article. They are not clinical-use software, medical-device materials, or a prospective triage protocol. Use of data and manuscript materials remains subject to the ethics, data-governance, journal, and citation requirements described in the associated article.
+
 ## Layout
 
 ```text
