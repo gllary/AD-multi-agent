@@ -53,41 +53,41 @@ Frozen setting or handling rule: Full chain-of-thought was not requested or used
 
 Section B. Submission-facing safety-governance audit summary
 
-The final Cohort V2 denominator is the latest CSV-defined analysis set: 14,989 patient encounters, including 3,947 AAS-positive and 11,042 AAS-negative records. AAS-negative labels were assigned after physician record review plus individual telephone follow-up in May 2026 before final labelling. This file reports only the final V2 submission denominator and related action-level summaries.
+The final Cohort V2 denominator is the CSV-defined analysis set: 15,109 patient encounters, including 4,067 AAS-positive and 11,042 AAS-negative records. AAS-negative labels were assigned after physician record review plus individual telephone follow-up in May 2026 before final labelling. This file reports the final V2 denominator and related action-level summaries.
 
 Cohort, Audit domain, Denominator, Summary
 D, Stage-level safety governance, 1,010, Frozen development-cohort stage-trace audit summarised in Supplementary Data 2.
 V1, Stage-level safety governance, 173, Frozen first-validation stage-trace audit summarised in Supplementary Data 2.
-V2, Final action-level governance, 14,989, Final accepted action after deterministic safety governance is evaluated on the latest CSV-defined patient set.
-V2, Reference-standard confirmation, 14,989, AAS-positive 3,947; AAS-negative 11,042; every candidate negative label had individual May 2026 telephone follow-up before final labelling.
-V2, Direct-CTA reassignment audit, 1,071 / 14,989, Canonical direct-CTA cases reassigned by the multi-agent controller to clinician-overseen reassessment; 0 AAS-positive cases in this subgroup.
+V2, Final action-level governance, 15,109, Final accepted action after deterministic safety governance is evaluated on the CSV-defined patient set.
+V2, Reference-standard confirmation, 15,109, AAS-positive 4,067; AAS-negative 11,042; every candidate negative label had individual May 2026 telephone follow-up before final labelling.
+V2, Direct-CTA reassignment audit, 1,071 / 15,109, Canonical direct-CTA cases reassigned by the multi-agent controller to clinician-overseen reassessment; 0 AAS-positive cases in this subgroup.
 
 Section C. Final Cohort V2 route metrics
 
 These rows use the final patient-level prediction set. Canonical is the frozen threshold-only route using the same quantitative substrate; single-agent is the one-agent LLM baseline under the same safety layer; multi-agent is the final accepted action after safety governance.
 
 Cohort, Route, n, TP, TN, FP, FN, Sens, Spec, PPV, NPV, Accuracy, F1, MCC
-V2, Canonical threshold route, 14,989, 3,871, 6,867, 4,175, 76, 0.981, 0.622, 0.481, 0.989, 0.716, 0.646, 0.532
-V2, Single-agent baseline, 14,989, 3,834, 7,680, 3,362, 113, 0.971, 0.696, 0.533, 0.985, 0.768, 0.688, 0.588
-V2, Final multi-agent accepted action, 14,989, 3,944, 7,990, 3,052, 3, 0.999, 0.724, 0.564, 1.000, 0.796, 0.721, 0.638
-V2, ADD-RS >=1, 14,989, 3,866, 5,486, 5,556, 81, 0.979, 0.497, 0.410, 0.985, 0.624, 0.578, 0.434
-V2, ADvISED-style, 14,989, 3,653, 4,366, 6,676, 294, 0.926, 0.395, 0.354, 0.937, 0.535, 0.512, 0.305
+V2, Canonical threshold route, 15,109, 3,871, 6,867, 4,175, 196, 0.952, 0.622, 0.481, 0.972, 0.711, 0.639, 0.510
+V2, Single-agent baseline, 15,109, 3,835, 7,680, 3,362, 232, 0.943, 0.696, 0.533, 0.971, 0.762, 0.681, 0.567
+V2, Final multi-agent accepted action, 15,109, 3,944, 7,990, 3,052, 123, 0.970, 0.724, 0.564, 0.985, 0.790, 0.713, 0.617
+V2, ADD-RS >=1, 15,109, 3,866, 5,486, 5,556, 201, 0.951, 0.497, 0.410, 0.965, 0.619, 0.573, 0.410
+V2, ADvISED-style, 15,109, 3,727, 4,366, 6,676, 340, 0.916, 0.395, 0.358, 0.928, 0.536, 0.515, 0.299
 
 Section D. Residual AAS-positive reassessment subtype audit
 
 Residual false negatives are AAS-positive patients assigned clinician-overseen reassessment rather than direct CTA or urgent pathway escalation in the final V2 analysis set. Type-A-involving descriptors were counted using the same proximal-aortic safety definition as the manuscript and supplement.
 
 Method, Stanford A, Stanford B, Intramural haematoma, Penetrating atherosclerotic ulcer, Unphenotyped/indeterminate, Any type-A descriptor, Worst-case type-A upper bound, Total false negatives
-ADD-RS >=1, 14, 42, 6, 10, 9, 18, 27, 81
-Canonical threshold route, 11, 35, 8, 11, 11, 17, 28, 76
-Single-agent baseline, 29, 50, 14, 9, 11, 40, 51, 113
-Final multi-agent accepted action, 0, 3, 0, 0, 0, 0, 0, 3
+ADD-RS >=1, 24, 99, 9, 48, 21, 31, 52, 201
+Canonical threshold route, 21, 92, 11, 49, 23, 30, 53, 196
+Single-agent baseline, 39, 107, 17, 46, 23, 53, 76, 232
+Final multi-agent accepted action, 10, 60, 3, 38, 12, 13, 25, 123
 
 Section E. Direct-CTA reassignment audit
 
 The largest de-escalation route consisted of patients assigned direct CTA by the canonical threshold pathway but clinician-overseen reassessment by the final multi-agent controller.
 
 Audit domain, Count / denominator, Interpretation
-Canonical direct CTA to multi-agent clinician-overseen reassessment, 1,071 / 14,989, Largest direct-CTA reassignment route in Cohort V2.
+Canonical direct CTA to multi-agent clinician-overseen reassessment, 1,071 / 15,109, Largest direct-CTA reassignment route in Cohort V2.
 AAS-positive / AAS-negative in this subgroup, 0 / 1,071; 1,071 / 1,071, Reassignment reduced false-positive assigned escalation in retrospective policy simulation; no adjudicated AAS-positive patient was reassigned through this route.
-Canonical direct-CTA subgroup, 6,538 total; 1,071 reassigned (16.4%), Terminal-action agreement after reassignment remained 83.4% in this subgroup.
+Canonical direct-CTA subgroup, 6,538 total; 1,071 reassigned (16.4%), Terminal-action agreement after reassignment remained 83.6% overall.
