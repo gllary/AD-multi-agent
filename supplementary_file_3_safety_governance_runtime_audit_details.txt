@@ -1,0 +1,93 @@
+Supplementary File 3. Safety-governance runtime settings and audit logs
+
+This plain-text supplementary file preserves detailed runtime, fallback, and safety-governance audit information that was moved out of the Supplementary Information PDF for readability. It does not define new analyses and was not used to tune prompts, thresholds, routing policies, model backends, or safety rules after external-cohort exposure.
+
+Section A. LLM runtime and failure handling
+
+These settings apply to specialist, coordinator, and single-agent calls.
+
+Component: Backend
+Frozen setting or handling rule: Qwen3-235B-A22B-Instruct through an OpenAI-compatible local chat-completions interface.
+
+Component: Maximum context length
+Frozen setting or handling rule: 8,192 tokens.
+
+Component: Deployment engine
+Frozen setting or handling rule: vLLM deployment on a private institutional server.
+
+Component: Hardware
+Frozen setting or handling rule: Four 141-GB H20 GPUs.
+
+Component: Third-party API use
+Frozen setting or handling rule: None; patient-level LLM calls were not sent to a third-party API provider.
+
+Component: PHI export risk control
+Frozen setting or handling rule: De-identified study IDs and stage-bounded evidence packets were processed inside the private server environment, with no protected health information exported outside the institutional deployment.
+
+Component: Temperature
+Frozen setting or handling rule: 0.2 for reported validation evaluations.
+
+Component: Prompt specification
+Frozen setting or handling rule: Specialist and coordinator prompts frozen before any external-cohort exposure.
+
+Component: Patient identifiers
+Frozen setting or handling rule: De-identified study IDs and stage-bounded evidence packets used for analysis.
+
+Component: Output constraint
+Frozen setting or handling rule: One JSON object conforming to the supplied schema; allowed action values supplied in the user payload.
+
+Component: Timeout threshold
+Frozen setting or handling rule: 120 s per raw API attempt before retry/failure handling.
+
+Component: Retry and resumption
+Frozen setting or handling rule: Transient timeout/API/transport failures were retried, and checkpointed outputs allowed interrupted validation evaluations to resume from the last validated call; 3,367 retry events occurred before the final retained outputs were obtained.
+
+Component: Malformed or missing JSON
+Frozen setting or handling rule: Deterministic fallback record generated from stage, role, risk score, and risk band.
+
+Component: Illegal action
+Frozen setting or handling rule: Rejected by the deterministic safety layer and reverted to the canonical threshold route.
+
+Component: Free-text reasoning
+Frozen setting or handling rule: Full chain-of-thought was not requested or used; bounded rationale summaries and evidence lists were stored.
+
+Section B. Submission-facing safety-governance audit summary
+
+The final Cohort V2 denominator is the latest CSV-defined analysis set: 14,989 patient encounters, including 3,947 AAS-positive and 11,042 AAS-negative records. AAS-negative labels were assigned after physician record review plus individual telephone follow-up in May 2026 before final labelling. This file reports only the final V2 submission denominator and related action-level summaries.
+
+Cohort, Audit domain, Denominator, Summary
+D, Stage-level safety governance, 1,010, Frozen development-cohort stage-trace audit summarised in Supplementary Data 2.
+V1, Stage-level safety governance, 173, Frozen first-validation stage-trace audit summarised in Supplementary Data 2.
+V2, Final action-level governance, 14,989, Final accepted action after deterministic safety governance is evaluated on the latest CSV-defined patient set.
+V2, Reference-standard confirmation, 14,989, AAS-positive 3,947; AAS-negative 11,042; every candidate negative label had individual May 2026 telephone follow-up before final labelling.
+V2, Direct-CTA reassignment audit, 1,071 / 14,989, Canonical direct-CTA cases reassigned by the multi-agent controller to clinician-overseen reassessment; 0 AAS-positive cases in this subgroup.
+
+Section C. Final Cohort V2 route metrics
+
+These rows use the final patient-level prediction set. Canonical is the frozen threshold-only route using the same quantitative substrate; single-agent is the one-agent LLM baseline under the same safety layer; multi-agent is the final accepted action after safety governance.
+
+Cohort, Route, n, TP, TN, FP, FN, Sens, Spec, PPV, NPV, Accuracy, F1, MCC
+V2, Canonical threshold route, 14,989, 3,871, 6,867, 4,175, 76, 0.981, 0.622, 0.481, 0.989, 0.716, 0.646, 0.532
+V2, Single-agent baseline, 14,989, 3,834, 7,680, 3,362, 113, 0.971, 0.696, 0.533, 0.985, 0.768, 0.688, 0.588
+V2, Final multi-agent accepted action, 14,989, 3,944, 7,990, 3,052, 3, 0.999, 0.724, 0.564, 1.000, 0.796, 0.721, 0.638
+V2, ADD-RS >=1, 14,989, 3,866, 5,486, 5,556, 81, 0.979, 0.497, 0.410, 0.985, 0.624, 0.578, 0.434
+V2, ADvISED-style, 14,989, 3,653, 4,366, 6,676, 294, 0.926, 0.395, 0.354, 0.937, 0.535, 0.512, 0.305
+
+Section D. Residual AAS-positive reassessment subtype audit
+
+Residual false negatives are AAS-positive patients assigned clinician-overseen reassessment rather than direct CTA or urgent pathway escalation in the final V2 analysis set. Type-A-involving descriptors were counted using the same proximal-aortic safety definition as the manuscript and supplement.
+
+Method, Stanford A, Stanford B, Intramural haematoma, Penetrating atherosclerotic ulcer, Unphenotyped/indeterminate, Any type-A descriptor, Worst-case type-A upper bound, Total false negatives
+ADD-RS >=1, 14, 42, 6, 10, 9, 18, 27, 81
+Canonical threshold route, 11, 35, 8, 11, 11, 17, 28, 76
+Single-agent baseline, 29, 50, 14, 9, 11, 40, 51, 113
+Final multi-agent accepted action, 0, 3, 0, 0, 0, 0, 0, 3
+
+Section E. Direct-CTA reassignment audit
+
+The largest de-escalation route consisted of patients assigned direct CTA by the canonical threshold pathway but clinician-overseen reassessment by the final multi-agent controller.
+
+Audit domain, Count / denominator, Interpretation
+Canonical direct CTA to multi-agent clinician-overseen reassessment, 1,071 / 14,989, Largest direct-CTA reassignment route in Cohort V2.
+AAS-positive / AAS-negative in this subgroup, 0 / 1,071; 1,071 / 1,071, Reassignment reduced false-positive assigned escalation in retrospective policy simulation; no adjudicated AAS-positive patient was reassigned through this route.
+Canonical direct-CTA subgroup, 6,538 total; 1,071 reassigned (16.4%), Terminal-action agreement after reassignment remained 83.4% in this subgroup.

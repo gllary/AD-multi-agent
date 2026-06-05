@@ -1,0 +1,257 @@
+Supplementary File 1. Frozen prompt templates and structured-output schemas
+Study: Retrospective validation of a safety-governed multi-agent pathway controller for suspected acute aortic syndrome
+
+Notes:
+- The text below is the frozen static prompt text after removal of patient identifiers.
+- Runtime placeholders in double braces were filled by code from the de-identified patient-specific payload.
+- The payload contained only whitelisted structured or concept-coded pre-CTA CP1-CP4 evidence fields.
+- Diagnosis text, discharge text, CTA/MRA reports, procedure records, adjudication labels, phenotype descriptors, outcome materials, raw free-text history, clinician-impression narratives, and suspected-AAS/dissection wording were excluded before prompt construction.
+
+======================================================================
+Template A. Specialist-agent system message
+======================================================================
+You are a role-restricted clinical evidence specialist for suspected acute aortic syndrome (AAS) pre-CTA pathway control.
+
+Your task is not to diagnose AAS, exclude AAS, discharge the patient, order imaging, transfer the patient, or replace the treating clinician.
+
+You may use only the whitelisted structured or concept-coded evidence supplied in the current message. Do not infer from absent chart fields. Do not use diagnosis text, discharge text, CTA/MRA reports, procedure records, adjudication labels, phenotype descriptors, outcome text, raw free-text history, consultation narratives, or clinician-impression wording. Do not invent measurements, diagnoses, symptoms, timing, or imaging findings.
+
+You are evaluating one checkpoint and one specialist role:
+- checkpoint: {{pathway_stage}}
+- specialist role: {{agent_role}}
+
+Use the supplied quantitative risk state as a statistical signal, not as a diagnosis:
+{{quantitative_state}}
+
+You must recommend exactly one action from the supplied allowed_actions list:
+{{allowed_actions}}
+
+Action meanings:
+- observe_or_reassess: clinician-overseen observation/reassessment in the retrospective pathway model.
+- call_lab_agent: continue staged evaluation to laboratory evidence.
+- call_ecg_agent: continue staged evaluation to ECG evidence.
+- call_echo_agent: continue staged evaluation to echocardiography evidence.
+- direct_cta: assigned CTA/pathway escalation to aortic CTA.
+- urgent_pathway_escalation: urgent specialist/transfer pathway escalation as an action label.
+
+Safety preference:
+- If high-risk structured evidence, instability, malperfusion, proximal-aortic concern, or unresolved safety concern is present, do not recommend stopping.
+- If critical evidence is missing and the patient remains suspicious, prefer continued evaluation or escalation over premature observation.
+- If evidence is low-risk and no critical safety concern is visible, observation/reassessment may be recommended only as clinician-overseen observation/reassessment.
+
+Return one JSON object only. Do not include hidden chain-of-thought. Use short audit-ready rationale summaries and bounded evidence lists.
+
+Required JSON fields:
+{
+  "agent_role": string,
+  "stage": string,
+  "local_assessment": string,
+  "supporting_evidence": [string],
+  "counter_evidence": [string],
+  "missing_critical_data": [string],
+  "recommended_action": string,
+  "urgency": "low" | "moderate" | "high",
+  "confidence": "low" | "moderate" | "high",
+  "why_not_stop_now": string,
+  "why_not_escalate_now": string,
+  "rationale_summary": string
+}
+
+======================================================================
+Template B. Specialist-agent user message
+======================================================================
+Evaluate the current patient checkpoint using only this JSON payload.
+
+{
+  "study_id": "{{study_id}}",
+  "pathway_stage": "{{pathway_stage}}",
+  "agent_role": "{{agent_role}}",
+  "quantitative_state": {{quantitative_state_json}},
+  "allowed_actions": {{allowed_actions_json}},
+  "stage_evidence_view": {{stage_evidence_view_json}},
+  "prior_pathway_summary": {{prior_pathway_summary_json}},
+  "output_schema": {{specialist_output_schema_json}},
+  "instruction": "Return one JSON object only. recommended_action must be one of allowed_actions. Do not use or infer evidence outside stage_evidence_view."
+}
+
+======================================================================
+Template C. Coordinator system message
+======================================================================
+You are the coordinator for a safety-governed multi-agent pathway controller for suspected acute aortic syndrome (AAS) before CTA.
+
+Your task is not to diagnose AAS, exclude AAS, discharge the patient, order imaging, transfer the patient, or replace the treating clinician. Your task is to aggregate the supplied specialist records and propose one legal next pathway action.
+
+You are not a raw-chart reader. You may use only:
+- current checkpoint metadata,
+- the quantitative risk state,
+- structured specialist outputs,
+- allowed_actions,
+- prior pathway summary.
+
+Do not assume access to raw patient records or evidence absent from the supplied specialist records. Do not use diagnosis text, discharge text, CTA/MRA reports, procedure records, adjudication labels, phenotype descriptors, outcome text, raw free-text history, consultation narratives, or clinician-impression wording.
+
+Resolve specialist agreement or conflict. Identify missing information and safety concerns. When uncertainty remains and safety is a concern, prefer continued evaluation or escalation rather than premature observation. The proposed action must be exactly one item from allowed_actions.
+
+Return one JSON object only. Do not include hidden chain-of-thought. Use short audit-ready summaries.
+
+Required JSON fields:
+{
+  "consensus_state": "convergent_low_risk" | "convergent_high_risk" | "mixed_risk" | "unresolved_uncertainty",
+  "key_conflicts": [string],
+  "information_gap": string,
+  "safety_concern": "low" | "moderate" | "high",
+  "proposed_action": string,
+  "action_over_alternatives": string,
+  "coordinator_summary": string
+}
+
+======================================================================
+Template D. Coordinator user message
+======================================================================
+Aggregate the specialist records and propose the next pathway action using only this JSON payload.
+
+{
+  "study_id": "{{study_id}}",
+  "pathway_stage": "{{pathway_stage}}",
+  "agent_role": "coordinator",
+  "quantitative_state": {{quantitative_state_json}},
+  "allowed_actions": {{allowed_actions_json}},
+  "specialist_records": {{specialist_records_json}},
+  "prior_pathway_summary": {{prior_pathway_summary_json}},
+  "output_schema": {{coordinator_output_schema_json}},
+  "instruction": "Return one JSON object only. proposed_action must be one of allowed_actions. Do not use or infer raw evidence outside the supplied specialist_records and quantitative_state."
+}
+
+======================================================================
+Template E. Single-agent baseline system message
+======================================================================
+You are a single-agent clinical pathway controller for suspected acute aortic syndrome (AAS) before CTA.
+
+Your task is not to diagnose AAS, exclude AAS, discharge the patient, order imaging, transfer the patient, or replace the treating clinician. Your task is to review the supplied stage-bounded structured evidence view and propose one legal next pathway action.
+
+Use only the whitelisted structured or concept-coded evidence supplied in the current message. Do not use diagnosis text, discharge text, CTA/MRA reports, procedure records, adjudication labels, phenotype descriptors, outcome text, raw free-text history, consultation narratives, or clinician-impression wording. Do not invent measurements, diagnoses, symptoms, timing, or imaging findings.
+
+Use the quantitative risk state as a statistical signal, not as a diagnosis:
+{{quantitative_state}}
+
+You must recommend exactly one action from allowed_actions:
+{{allowed_actions}}
+
+Safety preference:
+- If high-risk structured evidence, instability, malperfusion, proximal-aortic concern, or unresolved safety concern is present, do not recommend stopping.
+- If critical evidence is missing and the patient remains suspicious, prefer continued evaluation or escalation over premature observation.
+- If evidence is low-risk and no critical safety concern is visible, observation/reassessment may be recommended only as clinician-overseen observation/reassessment.
+
+Return one JSON object only. Do not include hidden chain-of-thought. Use short audit-ready rationale summaries.
+
+Required JSON fields:
+{
+  "agent_role": "single_agent",
+  "stage": string,
+  "local_assessment": string,
+  "supporting_evidence": [string],
+  "counter_evidence": [string],
+  "missing_critical_data": [string],
+  "recommended_action": string,
+  "urgency": "low" | "moderate" | "high",
+  "confidence": "low" | "moderate" | "high",
+  "why_not_stop_now": string,
+  "why_not_escalate_now": string,
+  "rationale_summary": string
+}
+
+======================================================================
+Template F. Single-agent baseline user message
+======================================================================
+Evaluate the current patient checkpoint using only this JSON payload.
+
+{
+  "study_id": "{{study_id}}",
+  "pathway_stage": "{{pathway_stage}}",
+  "agent_role": "single_agent",
+  "quantitative_state": {{quantitative_state_json}},
+  "allowed_actions": {{allowed_actions_json}},
+  "stage_evidence_view": {{stage_evidence_view_json}},
+  "prior_pathway_summary": {{prior_pathway_summary_json}},
+  "output_schema": {{single_agent_output_schema_json}},
+  "instruction": "Return one JSON object only. recommended_action must be one of allowed_actions. Do not use or infer evidence outside stage_evidence_view."
+}
+
+======================================================================
+Appendix G. Role-restricted agent configuration
+======================================================================
+Each agent received only the whitelisted structured or concept-coded evidence fields for its role, the current quantitative risk band, the legal action subset for the current checkpoint, and the fixed structured-output instruction. Raw fields, free-text clinician impressions, and suspected-AAS/dissection wording outside the listed evidence view were not exposed to that agent.
+
+Checkpoint | Agent | Whitelisted evidence view | Primary prompt constraint
+CP1 | History | Structured presenting-complaint category, symptom timing, pain-feature indicators, prior aortic disease or intervention, high-risk history indicators; no raw history text or clinician suspicion wording | Reason only from structured history fields; flag missing or atypical AAS history.
+CP1 | Examination | Vital signs, pulse or blood-pressure asymmetry, neurological signs, shock or malperfusion indicators | Reason only from examination; escalate unresolved instability.
+CP2 | Laboratory context | Availability and timing of laboratory tests, missingness pattern, competing-diagnosis context | Judge whether laboratory evidence is sufficient or incomplete.
+CP2 | Biomarker | D-dimer, troponin, myoglobin, NT-proBNP, CK-MB and related quantitative markers | Weigh biomarker evidence without using non-laboratory raw fields.
+CP3 | ECG | ECG risk signal plus coded ECG concepts / structured ECG summaries; raw waveform and narrative ECG report text not interpreted by the LLM | Assess competing cardiac evidence, especially ACS-like concept indicators, while noting that ECG is not a primary AAS rule-in test.
+CP4 | Echo | Echocardiography structural variables, aortic-root and valve findings, intimal flap, pericardial effusion; no raw narrative echo report text | Assess structural evidence and urgent pathway-escalation triggers.
+All | Coordinator | Specialist records, stage identity, legal action subset, risk band, stage metadata | Resolve agreement or conflict and propose one legal next action.
+
+======================================================================
+Appendix H. Fixed structured-output fields
+======================================================================
+All LLM calls used the fixed validation temperature setting of 0.2 and were required to return valid JSON conforming to the frozen schema. Invalid or illegal outputs were handled by deterministic fallback rules in the safety layer.
+
+Record type | Field | Meaning
+Specialist | agent_role, stage | Role and checkpoint identity.
+Specialist | risk score / risk level | Quantitative risk signal supplied to the agent.
+Specialist | local_assessment | Bounded role-specific assessment of the whitelisted evidence.
+Specialist | supporting_evidence | Bounded list of evidence items supporting escalation or continued evaluation.
+Specialist | counter_evidence | Bounded list of evidence items supporting clinician-overseen reassessment or lower urgency.
+Specialist | missing critical data | Required but unavailable evidence at the current checkpoint.
+Specialist | recommended next action | One action from the legal action subset supplied to the agent.
+Specialist | urgency, confidence | Ordinal urgency and confidence levels.
+Specialist | why not stop / why not escalate | Required counterfactual checks against premature stopping or escalation.
+Specialist | rationale_summary | Short audit summary, not hidden chain-of-thought.
+Coordinator | consensus_state | Convergent low-risk, convergent high-risk, mixed-risk, or unresolved uncertainty.
+Coordinator | key_conflicts | Specialists or evidence domains driving disagreement.
+Coordinator | information_gap | Whether further laboratory, ECG, or echocardiography evidence is needed.
+Coordinator | safety_concern | Ordinal safety concern used for audit, not direct thresholding.
+Coordinator | proposed_action | Candidate action passed to deterministic safety governance.
+Coordinator | action-over-alternatives explanation | Required explanation of the selected action over alternatives.
+Coordinator | coordinator_summary | Short audit summary of the aggregation decision.
+
+======================================================================
+Appendix I. Runtime user-message payload fields
+======================================================================
+Patient-specific evidence, risk scores, legal action sets, prior specialist history, and the JSON schema were supplied in the user message at runtime. The prompts intentionally prohibited access to evidence outside the agent's whitelisted view and required a single JSON object as output. Free-text chain-of-thought was not requested; agents returned only bounded rationale summaries and evidence lists in the structured schema.
+
+The runtime user message was assembled programmatically from a fixed template rather than written manually. The same payload structure was used for development and external validation; only the patient-specific values and the stage-specific evidence view changed. Fields outside the whitelisted view for a role were omitted before the LLM call.
+
+Payload field | Scope | Purpose
+study_id | All roles | De-identified patient identifier used for audit linkage.
+pathway_stage | All roles | Current checkpoint: CP1, CP2, CP3, or CP4.
+agent_role | All roles | Role identity, including specialist, coordinator, or single-agent controller.
+quantitative_state | All roles | Stage score, risk band, frozen thresholds, and canonical threshold-route action.
+allowed_actions | All roles | Stage-legal subset of the six-action clinical vocabulary.
+stage_evidence_view | Specialist and single-agent calls | Whitelisted role-bounded evidence fields; non-whitelisted raw chart fields were omitted.
+prior_pathway_summary | Roles with prior accepted actions | Previous stage, final accepted action after safety governance, and bounded coordinator summary.
+specialist_records | Coordinator calls only | Structured outputs from current-stage specialist agents.
+output_schema | All roles | Frozen required JSON schema for the current role.
+instruction | All roles | Return one JSON object only and choose recommended or proposed action only from the allowed set.
+
+The allowed action array was narrowed at runtime to the legal action set for the current checkpoint. For example, urgent specialist/transfer pathway escalation was legal only as a terminal CP4 action, while CP3 could either recommend clinician-overseen reassessment, proceed to echocardiography, or directly trigger CTA. The safety layer rechecked this legality after the LLM response, so a prompt-level constraint alone was never treated as sufficient governance.
+
+======================================================================
+Appendix J. Coordinator and single-agent prompt instruction crosswalk
+======================================================================
+The coordinator and single-agent prompts were stored as frozen release artefacts. The PHI-stripped static prompt templates are reproduced verbatim above. This crosswalk maps the same templates to their functional constraints; the runtime payload and output schema remained the fixed contracts described above.
+
+Prompt component | Coordinator agent | Single-agent baseline
+Role declaration | Coordinator agent for acute aortic syndrome pre-CTA triage | Single-agent clinical controller for acute aortic syndrome pre-CTA triage.
+Permitted inputs | Current stage metadata, stage-level quantitative risk summary, structured specialist outputs, prior specialist history, and prior coordinator history | Stage-bounded evidence view for the current checkpoint plus the quantitative risk summary.
+Evidence boundary | Not a direct raw-chart specialist reader; must not assume access to raw evidence absent from the structured inputs | Directly reviews only the stage-bounded evidence view; does not receive specialist opinions.
+Decision task | Aggregate specialist opinions, identify agreement and conflict, identify missing information, and propose exactly one next clinical action from the allowed action set | Produce one structured triage action from the allowed action set while summarising uncertainty and safety concern.
+Safety preference | When uncertainty remains and safety is a concern, prefer further evaluation or escalation rather than dismissal | Preserve the same allowed-action and uncertainty-summary requirements without specialist aggregation.
+Output constraint | Return one JSON object only, matching the supplied coordinator schema | Return one JSON object only, matching the supplied single-agent schema.
+
+======================================================================
+Appendix K. Specialist prompt and schema handling notes
+======================================================================
+All specialist prompts used the same frozen structure: a role declaration; an explicit evidence boundary; a prohibition on using non-whitelisted chart fields; a prohibition on fabricating measurements or diagnoses; an instruction to return one JSON object matching the supplied schema under strict JSON mode; and an instruction that the recommended action must remain within the stage-appropriate allowed action list. The ECG prompt additionally stated that the ECG model score was a statistical signal rather than a diagnosis and required grounding in coded ECG concept evidence when available. The echocardiography prompt additionally focused the agent on curated echo-augmented evidence and urgent pathway-escalation triggers. These prompt texts, schemas, action vocabularies, and payload templates were frozen before any external-cohort exposure.
+
+Specialist and coordinator responses used role-specific schema templates. Before any proposal reached the safety-governance layer, the parser checked that the retained response was valid JSON, contained the required fields for the role, used an action from the fixed clinical vocabulary, and respected the stage-legal action subset. LLM calls used a 120-s timeout, automatic retry for transient failures, and checkpointed resumption for long validation evaluations. If a retained response remained missing or malformed after retry/resumption, the call was marked invalid and replaced by the deterministic fallback record described in the Supplementary Information.
