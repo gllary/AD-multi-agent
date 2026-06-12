@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(os.environ.get("AAS_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
 os.environ["AAS_FIGURE_SET"] = "figures_0530_v2_new"
-os.environ["AAS_COHORT_V2_FROZEN_IDS"] = str(ROOT / "sn-article-template" / "cohort_v2_15220_frozen_ids.csv")
+os.environ["AAS_COHORT_V2_FROZEN_IDS"] = str(ROOT / "sn-article-template" / "current_v2_dataset_ids0605.csv")
 
 import build_figures_0530 as build  # noqa: E402
 

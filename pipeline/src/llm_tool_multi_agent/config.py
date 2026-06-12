@@ -80,7 +80,7 @@ S1B_DIR = ARTIFACTS_DIR / "models" / "cnn"
 PRECOMPUTED_V6_DIR = ARTIFACTS_DIR / "precomputed" / "datasetB_v6"
 PRECOMPUTED_V6_CP3_TEXT = PRECOMPUTED_V6_DIR / "holdout_score_table_cp3_text.csv"
 
-DEFAULT_MODEL = "Qwen3.5-235B-A22B"
+DEFAULT_MODEL = "Qwen3-235B-A22B-Instruct"
 DEFAULT_API_BASE = "https://api.openai.com/v1"
 
 OUTPUT_DIR = PROJECT_ROOT / "outputs"

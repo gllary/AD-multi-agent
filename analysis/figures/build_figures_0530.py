@@ -382,7 +382,7 @@ def fig_study_design(metrics: pd.DataFrame) -> None:
     ax.text(0.803, 0.139, "Cohort V2 headline", ha="center", va="center",
             fontsize=7.2, fontweight="bold", color=ink)
     ax.text(0.803, 0.112,
-            "sensitivity 0.944  |  specificity 0.724  |  F1 0.706",
+            "sensitivity 0.970  |  specificity 0.724  |  F1 0.713",
             ha="center", va="center", fontsize=6.2, color=muted)
     base.save(fig, "F1_study_design_redesigned")
 

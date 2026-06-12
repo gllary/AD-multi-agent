@@ -48,9 +48,9 @@ for p in (str(SRC), str(SCRIPTS)):
         sys.path.insert(0, p)
 
 # ── LLM gateway defaults ──────────────────────────────────────────────
-os.environ.setdefault("QWEN_API_KEY", "sk-RgRBQTrrsyJHBQSmjUJwqhyxf06cBmzng14ojveiOJIBTLgf")
+# QWEN_API_KEY must be supplied by the runtime environment.
 os.environ.setdefault("QWEN_BASE_URL", "http://127.0.0.1:8003/v1/")
-os.environ.setdefault("QWEN_MODEL_NAME", "qwen3-235B-A22B")
+os.environ.setdefault("QWEN_MODEL_NAME", "Qwen3-235B-A22B-Instruct")
 os.environ.setdefault("QWEN_TIMEOUT", "120")
 os.environ.setdefault("MPLCONFIGDIR", str(BUNDLE_ROOT / ".mplconfig"))
 pathlib.Path(os.environ["MPLCONFIGDIR"]).mkdir(parents=True, exist_ok=True)

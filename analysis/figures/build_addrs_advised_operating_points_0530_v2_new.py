@@ -74,15 +74,15 @@ def build_points() -> pd.DataFrame:
     rows.extend([
         {
             "system": "ADD-RS >=1",
-            "specificity": 0.4968302844,
-            "sensitivity": 0.9253231211,
+            "specificity": 0.4968302843687738,
+            "sensitivity": 0.950577821489,
             "marker": "s",
             "color": "#E6B85C",
         },
         {
             "system": "ADvISED-style",
-            "specificity": 0.3952182576,
-            "sensitivity": 0.9104834849,
+            "specificity": 0.39521825756203585,
+            "sensitivity": 0.9164002950577821,
             "marker": "s",
             "color": "#D96C5F",
         },
@@ -114,7 +114,7 @@ def main() -> None:
                 color=row["color"], ha=ha, va="center", fontweight="bold", fontsize=8.6)
 
     ax.set_xlim(0.34, 0.76)
-    ax.set_ylim(0.895, 0.952)
+    ax.set_ylim(0.895, 0.982)
     ax.set_xlabel("Specificity")
     ax.set_ylabel("Sensitivity")
     ax.set_title("Same-patient operating points in Cohort V2")

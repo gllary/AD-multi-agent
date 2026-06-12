@@ -24,7 +24,7 @@ import pandas as pd
 
 OUT = ROOT / "paper_figures" / "figures_0530_v2_new"
 AUDIT_OUT = ROOT / "paper_figures" / "figures_0530_v2_new_audit"
-FROZEN_IDS = ROOT / "sn-article-template" / "cohort_v2_15220_frozen_ids.csv"
+FROZEN_IDS = ROOT / "sn-article-template" / "current_v2_dataset_ids0605.csv"
 POLICY_JSON = ROOT / "phase1_qwen_16218_bundle" / "artifacts" / "policy" / "best_policy_thresholds.json"
 
 SCORE_SOURCES = [
@@ -177,9 +177,9 @@ def best_at_or_below(frontier: pd.DataFrame, fpr: float) -> float:
 
 def plot(frontier: pd.DataFrame) -> None:
     operating = pd.DataFrame([
-        {"method": "Canonical", "fpr": 0.3781017931534142, "sensitivity": 0.9265198659645764, "color": CANONICAL},
-        {"method": "Single-agent", "fpr": 0.30447382720521643, "sensitivity": 0.9186213499281953, "color": SINGLE},
-        {"method": "Multi-agent", "fpr": 0.27639920297047636, "sensitivity": 0.9439923408338918, "color": MULTI},
+        {"method": "Canonical", "fpr": 0.3781017931534142, "sensitivity": 0.9518072289156626, "color": CANONICAL},
+        {"method": "Single-agent", "fpr": 0.30447382720521643, "sensitivity": 0.9429554954511938, "color": SINGLE},
+        {"method": "Multi-agent", "fpr": 0.27639920297047636, "sensitivity": 0.9697565761003196, "color": MULTI},
     ])
     multi = operating[operating["method"] == "Multi-agent"].iloc[0]
     frontier_at_multi = best_at_or_below(frontier, float(multi["fpr"]))
@@ -216,7 +216,7 @@ def plot(frontier: pd.DataFrame) -> None:
     )
 
     ax.set_xlim(0.16, 0.49)
-    ax.set_ylim(0.84, 0.955)
+    ax.set_ylim(0.84, 0.985)
     ax.set_xlabel("False-positive rate (1 - specificity)")
     ax.set_ylabel("Sensitivity")
     ax.set_title("Canonical threshold frontier on frozen Cohort V2")
