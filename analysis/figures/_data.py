@@ -38,7 +38,7 @@ METHOD_TO_COLUMN = {
 COHORT_META: dict[str, dict] = {
     "datasetA": {
         "role": "development",
-        "site": "Xiangya Second Hospital",
+        "site": "The Second Xiangya Hospital",
         "site_label": "Site 1",
         "label_sop": "Physician primary annotation",
         "n": 1010,
@@ -54,7 +54,7 @@ COHORT_META: dict[str, dict] = {
     },
     "xiangya_720": {
         "role": "zero-shot external",
-        "site": "Xiangya Hospital",
+        "site": "Xiangya Big Data Platform",
         "site_label": "Site 3",
         "label_sop": "Physician adjudication",
         "n": 630,
@@ -62,7 +62,7 @@ COHORT_META: dict[str, dict] = {
     },
     "xiangya_16218": {
         "role": "zero-shot external",
-        "site": "Xiangya Hospital",
+        "site": "Xiangya Big Data Platform",
         "site_label": "Site 3",
         "label_sop": ("LLM-assisted candidate extraction with dual independent "
                       "physician adjudication and third-physician arbitration"),

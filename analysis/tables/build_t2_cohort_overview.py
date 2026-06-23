@@ -17,12 +17,12 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(os.environ.get("AAS_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
-sys.path.insert(0, str(ROOT / "AAS_Code" / "analysis" / "figures"))
+ROOT = Path(os.environ.get("AAS_PROJECT_ROOT", Path(__file__).resolve().parents[2]))
+sys.path.insert(0, str(ROOT / "analysis" / "figures"))
 from _data import COHORT_META, COHORT_ORDER, load_predictions  # noqa: E402
 
-OUT = ROOT / "tables"
-DOCS = ROOT / "docs"
+OUT = ROOT / "paper_figures" / "tables"
+DOCS = ROOT / "paper_figures" / "docs"
 OUT.mkdir(parents=True, exist_ok=True)
 DOCS.mkdir(parents=True, exist_ok=True)
 
@@ -77,8 +77,8 @@ def main() -> None:
             "site":           meta["site"],
             "site_label":     meta["site_label"],
             "n":              n,
-            "n_AAS_pos":      pos,
-            "n_AAS_neg":      neg,
+            "n_AD_pos":       pos,
+            "n_AD_neg":       neg,
             "prevalence":     prev,
             "label_sop":      meta["label_sop"],
             "study_role_note": COHORT_NOTE[cohort],
@@ -95,18 +95,18 @@ def main() -> None:
               "28.0 – 52.3%). The three external cohorts were not consulted "
               "during model training, prompt iteration, threshold calibration, "
               "or hyperparameter selection.\n\n")
-    md.append("| ID | Cohort name | Role | Site | n | AAS+ | AAS− | Prevalence | Label generation | Notes |\n")
+    md.append("| ID | Cohort name | Role | Site | n | AD+ | AD− | AD prevalence | Label generation | Notes |\n")
     md.append("|---|---|---|---|---:|---:|---:|---:|---|---|\n")
     for _, r in df.iterrows():
         md.append(
             f"| **{r['cohort_id']}** | {r['full_name']} | {r['role']} | {r['site']} | "
-            f"{int(r['n']):,} | {int(r['n_AAS_pos']):,} | "
-            f"{int(r['n_AAS_neg']):,} | {r['prevalence']*100:.1f}% | "
+            f"{int(r['n']):,} | {int(r['n_AD_pos']):,} | "
+            f"{int(r['n_AD_neg']):,} | {r['prevalence']*100:.1f}% | "
             f"{r['label_sop']} | {r['study_role_note']} |\n"
         )
     md.append("\n")
-    md.append("*AAS, acute aortic syndrome (includes aortic dissection, "
-              "intramural haematoma, penetrating atherosclerotic ulcer).*\n")
+    md.append("*AD, acute aortic dissection. The retained CSV schema uses the legacy "
+              "`AAS` binary label column for compatibility with frozen scripts.*\n")
 
     (OUT / "T2_cohort_overview.md").write_text("".join(md))
 

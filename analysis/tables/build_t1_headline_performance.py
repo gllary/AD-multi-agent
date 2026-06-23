@@ -17,13 +17,13 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(os.environ.get("AAS_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
-sys.path.insert(0, str(ROOT / "AAS_Code" / "analysis" / "figures"))
+ROOT = Path(os.environ.get("AAS_PROJECT_ROOT", Path(__file__).resolve().parents[2]))
+sys.path.insert(0, str(ROOT / "analysis" / "figures"))
 from _data import COHORT_META, COHORT_ORDER, METHOD_ORDER, load_predictions  # noqa: E402
 from _metrics import bootstrap_metrics, point_metrics  # noqa: E402
 
-OUT = ROOT / "tables"
-DOCS = ROOT / "docs"
+OUT = ROOT / "paper_figures" / "tables"
+DOCS = ROOT / "paper_figures" / "docs"
 OUT.mkdir(parents=True, exist_ok=True)
 DOCS.mkdir(parents=True, exist_ok=True)
 
@@ -75,8 +75,8 @@ def main() -> None:
     md.append("# Table 1 — Headline discriminative performance\n\n")
     md.append("Per-patient action-level binary outcome (escalation = direct CTA or "
               "urgent pathway escalation; non-escalation = observe / continue to next stage). "
-              "Multi-agent denotes the safety-governed multi-agent pathway-control "
-              "system in its final published configuration. All metrics are point "
+              "Multi-agent denotes the safety-governed multi-agent framework "
+              "in its final published configuration. All metrics are point "
               "estimates with 1,000-bootstrap 95% CIs. Cohort D is the **development** "
               "cohort (5-fold CV out-of-fold predictions); the three external cohorts "
               "are **zero-shot** held-out test sets.\n\n")
@@ -85,8 +85,8 @@ def main() -> None:
         md.append(f"## {COHORT_LABELS[cohort]}\n\n")
         n = COHORT_META[cohort]["n"]
         prev = COHORT_META[cohort]["prevalence"]
-        md.append(f"*Prevalence = {prev*100:.1f}%; AAS+ = {int(round(n*prev))}; "
-                  f"AAS− = {n - int(round(n*prev))}.*\n\n")
+        md.append(f"*AD prevalence = {prev*100:.1f}%; AD+ = {int(round(n*prev))}; "
+                  f"AD− = {n - int(round(n*prev))}.*\n\n")
         md.append("| Method | TP | TN | FP | FN | Sens | Spec | PPV | NPV | F1 | MCC | κ |\n")
         md.append("|---|---:|---:|---:|---:|---|---|---|---|---|---|---|\n")
         for method in METHOD_ORDER:
@@ -112,7 +112,7 @@ def main() -> None:
         "\n",
         "## Purpose\n",
         "Headline Table 1 of the manuscript. It establishes that the multi-agent "
-        "pathway-control system strictly outperforms canonical-threshold and "
+        "framework improves on canonical-threshold and "
         "single-agent baselines on F1 and MCC across all three zero-shot external "
         "cohorts, while matching canonical on the training cohort.\n\n",
         "## Recommended placement\n",
@@ -129,7 +129,7 @@ def main() -> None:
         "- The table uses the current columns `canonical_pred`, `single_pred`, "
         "and `multi_raw_pred`; no historical replay or post-processing rule is applied.\n\n",
         "## Reading the table\n",
-        "- Across the three external cohorts, the multi-agent controller has the "
+        "- Across the three external cohorts, the multi-agent framework has the "
         "highest F1 and MCC point estimates.\n",
         "- On Cohort V3, multi-agent improves sensitivity, specificity, PPV, NPV, "
         "F1, and MCC relative to the canonical pathway.\n",

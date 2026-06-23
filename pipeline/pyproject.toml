@@ -5,13 +5,30 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "llm-tool-multi-agent"
 version = "0.2.0"
-description = "Tool-augmented LLM multi-agent pathway for AAS pre-CTA triage (self-contained layout)"
+description = "Tool-augmented LLM multi-agent pathway for suspected acute aortic dissection pre-CTA triage (self-contained layout)"
 readme = "README.md"
 requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+  { name = "AD multi-agent study authors" },
+]
 dependencies = [
   "pandas>=1.5",
   "numpy>=1.23",
+  "scipy>=1.10",
   "lightgbm>=4.0",
+  "scikit-learn>=1.2",
+  "openai>=1.0",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
 ]
 
 [project.optional-dependencies]

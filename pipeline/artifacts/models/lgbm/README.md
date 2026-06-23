@@ -1,12 +1,17 @@
-# LightGBM 工具权重
+# LightGBM Model Artifacts
 
-目录结构::
+Directory layout:
 
-  lgbm/
-    CP1/fold_models/fold*_booster.txt
-    CP2/fold_models/fold*_booster.txt
-    CP2E/fold_models/fold*_booster.txt
+```text
+lgbm/
+  CP1/fold_models/fold*_booster.txt
+  CP2/fold_models/fold*_booster.txt
+  CP2E/fold_models/fold*_booster.txt
+```
 
-本仓库已随 ``artifacts/models/lgbm/`` 附带与 **datasetA 训练** 一致的 5 折模型，可直接用于推断。
+This repository includes the frozen five-fold LightGBM model artifacts aligned
+with the Cohort D development boundary used in the manuscript.
 
-若你重新训练了模型，覆盖上述 ``fold*_booster.txt`` 即可。
+If models are retrained for a separate exploratory analysis, replace the
+corresponding `fold*_booster.txt` files and document that the result is no
+longer the frozen manuscript configuration.

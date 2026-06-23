@@ -47,10 +47,10 @@ class CohortSpec:
 
 
 COHORTS = [
-    CohortSpec("D", "Cohort D", "cohort_d_datasetA_raw_exploratory", "Xiangya Second Hospital"),
+    CohortSpec("D", "Cohort D", "cohort_d_datasetA_raw_exploratory", "The Second Xiangya Hospital"),
     CohortSpec("V1", "Cohort V1", "cohort_v1_b_v6_raw_exploratory", "Changsha Central Hospital"),
-    CohortSpec("V2", "Cohort V2", "cohort_v2_raw_exploratory", "Xiangya Hospital"),
-    CohortSpec("V3", "Cohort V3", "cohort_v3_raw_exploratory", "Xiangya Hospital"),
+    CohortSpec("V2", "Cohort V2", "cohort_v2_raw_exploratory", "Xiangya Big Data Platform"),
+    CohortSpec("V3", "Cohort V3", "cohort_v3_raw_exploratory", "Xiangya Big Data Platform"),
 ]
 
 COHORT_TO_OLD = {
@@ -321,7 +321,7 @@ def fig_baseline(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> None:
         ax_a.plot(rel, y[i], "o", ms=7, color=COHORT_COLORS[c.key], mec=INK, mew=0.4)
         tx = rel + 0.035 if rel < 0.86 else rel - 0.28
         ty = y[i] if rel < 0.86 else y[i] + 0.11
-        ax_a.text(tx, ty, f"n={int(row.n):,}; AAS+ {row.prevalence*100:.1f}%",
+        ax_a.text(tx, ty, f"n={int(row.n):,}; AD+ {row.prevalence*100:.1f}%",
                   va="center", fontsize=8, ha="left")
     ax_a.set_yticks(y)
     ax_a.set_yticklabels([f"{c.key}  {c.source}" for c in COHORTS])
@@ -366,7 +366,7 @@ def fig_baseline(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> None:
     ax_c.set_xlim(0, 1)
     ax_c.set_xticks([0, .25, .5, .75, 1])
     ax_c.set_xticklabels(["0", "25", "50", "75", "100"])
-    ax_c.set_xlabel("Prevalence among AAS-positive patients (%)")
+    ax_c.set_xlabel("Prevalence among AD-positive patients (%)")
     ax_c.set_title("High-yield clinical signals")
 
     labs = [("D_D_log", "D-dimer"), ("Mb_log", "Mb"), ("NT_proBNP_log", "NT-proBNP"), ("CK_MB_log", "CK-MB")]
@@ -384,7 +384,7 @@ def fig_baseline(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> None:
     ax_d.set_xticks(xbase)
     ax_d.set_xticklabels([lab for _, lab in labs])
     ax_d.set_ylabel("Log value; median and IQR")
-    ax_d.set_title("Laboratory burden in AAS-positive patients")
+    ax_d.set_title("Laboratory burden in AD-positive patients")
 
     for ax, lab in zip([ax_a, ax_b, ax_c, ax_d], "abcd"):
         panel(ax, lab)
@@ -640,7 +640,7 @@ def _v3_tier_data(preds: dict[str, pd.DataFrame]) -> pd.DataFrame:
     pos.loc[(pos["tier"] == "unclassified") & (pos["surgery_history"] == "stent_evar_tevar"), "tier"] = "T3"
     pos.loc[(pos["tier"] == "unclassified")
             & ((pos["any_classic_pain"] == 0) | (pos["history_aortic_disease"] == 1)
-               | (pos["stanford"] == "unspecified") | (pos["subtype"].isin(["PAU", "IMH", "other_aas"]))), "tier"] = "T2"
+               | (pos["stanford"] == "unspecified") | (pos["subtype"].isin(["other_ad", "non_stanford", "unspecified"]))), "tier"] = "T2"
     pos.loc[pos["tier"] == "unclassified", "tier"] = "T1"
     return pos
 
@@ -673,7 +673,7 @@ def fig_fn_safety(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> None
     ax_a.set_ylim(-0.42, 0.42)
     ax_a.set_xlim(0, 1)
     ax_a.set_yticks([])
-    ax_a.set_xlabel("Share of multi-agent false negatives")
+    ax_a.set_xlabel("Share of multi-agent AD-positive reassessment cases")
     ax_a.set_title(f"FN composition{scope_suffix} (n={len(fn):,})")
 
     rows = [
@@ -692,7 +692,7 @@ def fig_fn_safety(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> None
     ax_b.set_yticks(y)
     ax_b.set_yticklabels([r[0] for r in rows])
     ax_b.set_xlim(0, max([n / max(denom, 1) for _, n in rows]) * 100 * 1.45)
-    ax_b.set_xlabel("Share of all AAS-positive patients (%)")
+    ax_b.set_xlabel("Share of all AD-positive patients (%)")
     ax_b.set_title("Clinical miss severity")
 
     strata = [
@@ -728,8 +728,8 @@ def fig_fn_safety(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> None
     ax_c.set_yticks(yy)
     ax_c.set_yticklabels(top["label"], fontsize=6.9)
     ax_c.set_xlim(0, max(top["rate"].max() * 1.25, 10))
-    ax_c.set_xlabel("False-negative rate within subgroup (%)")
-    ax_c.set_title("Subgroup concentration of residual false negatives")
+    ax_c.set_xlabel("Residual reassessment rate within subgroup (%)")
+    ax_c.set_title("Subgroup concentration of residual reassessment")
     ax_c.grid(axis="x", color=GRID)
     ax_c.grid(axis="y", visible=False)
     ax_c.legend(handles=[Patch(color=color, label=domain) for domain, color in domain_colors.items()],
@@ -769,7 +769,7 @@ def fig_fn_safety_supplement(metrics: pd.DataFrame, preds: dict[str, pd.DataFram
     ax_c.set_yticklabels(labels, fontsize=6.8)
     ax_c.set_xticks([0])
     ax_c.set_xticklabels(["FN rate"])
-    ax_c.set_title(f"False-negative concentration by subgroup{scope_suffix}")
+    ax_c.set_title(f"Residual reassessment concentration by subgroup{scope_suffix}")
     fig.colorbar(im, ax=ax_c, fraction=0.05, pad=0.02, label="%")
 
     axes_cols = ["history_aortic_disease", "any_classic_pain", "echo_aas_signal", "reached_stage"]
@@ -1022,7 +1022,7 @@ def fig_literature(metrics: pd.DataFrame) -> None:
     ax.set_yticklabels(df["system"])
     ax.set_xlim(0.18, 1.10)
     ax.set_xlabel("Metric value")
-    ax.set_title("Published AAS tools and this study at reported operating points")
+    ax.set_title("Published AD tools and this study at reported operating points")
     ax.axvline(0.80, color=GRID, lw=1.0, zorder=0)
     ax.axvline(0.90, color=GRID, lw=1.0, zorder=0)
     ax.grid(axis="x", color=GRID)

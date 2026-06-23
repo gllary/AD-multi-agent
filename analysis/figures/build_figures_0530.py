@@ -1,7 +1,7 @@
 """Build the 2026-05-30 figure set with the merged external V2 cohort.
 
 This wrapper reuses the 2026-05-29 figure grammar, but treats the two retained
-Xiangya Hospital extracts as one non-overlapping external validation cohort
+Xiangya Big Data Platform extracts as one non-overlapping external validation cohort
 named Cohort V2 at the result level. Residual-safety panels use full-cohort
 error counts and structured fields available for every retained patient.
 """
@@ -44,9 +44,9 @@ def configure_base() -> None:
     base.OUT = OUT
     base.AUDIT_OUT = AUDIT_OUT
     base.COHORTS = [
-        base.CohortSpec("D", "Cohort D", "cohort_d_datasetA_raw_exploratory", "Xiangya Second Hospital"),
+        base.CohortSpec("D", "Cohort D", "cohort_d_datasetA_raw_exploratory", "The Second Xiangya Hospital"),
         base.CohortSpec("V1", "Cohort V1", "cohort_v1_b_v6_raw_exploratory", "Changsha Central Hospital"),
-        base.CohortSpec(MERGED_KEY, "Cohort V2", "merged_v2", "Xiangya Hospital"),
+        base.CohortSpec(MERGED_KEY, "Cohort V2", "merged_v2", "Xiangya Big Data Platform"),
     ]
     base.COHORT_COLORS = {
         "D": "#4E79A7",
@@ -284,7 +284,7 @@ def fig_study_design(metrics: pd.DataFrame) -> None:
         ax.plot([cx, cx], [cy - 0.012, cy + 0.012], color=color, lw=0.9, zorder=4)
 
     # A. Whole-system overview.
-    panel(0.020, 0.705, 0.960, 0.270, "a", "Safety-governed multi-agent pathway control for suspected acute aortic syndrome")
+    panel(0.020, 0.705, 0.960, 0.270, "a", "Safety-governed multi-agent pathway support for suspected acute aortic dissection")
     x_nodes = [0.085, 0.250, 0.425, 0.615, 0.795]
     overview = [
         ("Stage-bounded\nclinical evidence", "history, labs,\nECG, echo", pale_blue, risk),
@@ -356,11 +356,11 @@ def fig_study_design(metrics: pd.DataFrame) -> None:
     small_box(0.925, 0.425, 0.040, 0.125, "Action", "observe\nCTA\ntransfer", fc="#FFFFFF", ec=ink, fs=6.4)
 
     # D. Validation and action-derived evaluation.
-    panel(0.020, 0.050, 0.960, 0.315, "d", "No-refit external validation and action-derived endpoints")
+    panel(0.020, 0.050, 0.960, 0.315, "d", "Frozen external validation and action-derived endpoints")
     cohort_rows = [
-        ("Cohort D", "Development", "Xiangya Second Hospital", "D", base.COHORT_COLORS["D"], 0.065),
-        ("Cohort V1", "No-refit external", "Changsha Central Hospital", "V1", base.COHORT_COLORS["V1"], 0.265),
-        ("Cohort V2", "No-refit external", "Xiangya Hospital", "V2", base.COHORT_COLORS[MERGED_KEY], 0.465),
+        ("Cohort D", "Development", "The Second Xiangya Hospital", "D", base.COHORT_COLORS["D"], 0.065),
+        ("Cohort V1", "Frozen external", "Changsha Central Hospital", "V1", base.COHORT_COLORS["V1"], 0.265),
+        ("Cohort V2", "Frozen external", "Xiangya Big Data Platform", "V2", base.COHORT_COLORS[MERGED_KEY], 0.465),
     ]
     for name, role, site, key, col, x in cohort_rows:
         rounded(x, 0.190, 0.155, 0.095, "#FFFFFF", ec=col, lw=0.9, radius=0.010)
@@ -492,7 +492,7 @@ def fig_fn_safety(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> None
         rows.append({
             "method": method,
             "False positives": int(r["FP"]),
-            "False negatives": int(r["FN"]),
+            "AD-positive reassessment": int(r["FN"]),
             "Sensitivity": float(r["Sens"]),
             "Specificity": float(r["Spec"]),
             "PPV": float(r["PPV"]),
@@ -502,8 +502,8 @@ def fig_fn_safety(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> None
     x = np.arange(len(err))
     width = 0.36
     ax_a.bar(x - width / 2, err["False positives"], width=width, color="#D77A72", label="False positives")
-    ax_a.bar(x + width / 2, err["False negatives"], width=width, color=base.WINE, label="False negatives")
-    for xi, fp, fn in zip(x, err["False positives"], err["False negatives"]):
+    ax_a.bar(x + width / 2, err["AD-positive reassessment"], width=width, color=base.WINE, label="AD-positive reassessment")
+    for xi, fp, fn in zip(x, err["False positives"], err["AD-positive reassessment"]):
         ax_a.text(xi - width / 2, fp + 90, f"{fp:,}", ha="center", va="bottom", fontsize=7.2)
         ax_a.text(xi + width / 2, fn + 90, f"{fn:,}", ha="center", va="bottom", fontsize=7.2)
     ax_a.set_xticks(x)
@@ -514,10 +514,10 @@ def fig_fn_safety(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> None
 
     multi = metrics[(metrics["cohort"] == MERGED_KEY) & (metrics["method"] == "multi_raw")].iloc[0]
     outcome_rows = [
-        ("AAS+ assigned escalation", int(multi["TP"]), base.GREEN),
-        ("AAS+ assigned obs/reassess", int(multi["FN"]), base.WINE),
-        ("AAS- assigned obs/reassess", int(multi["TN"]), base.BLUE),
-        ("AAS- assigned escalation", int(multi["FP"]), "#D77A72"),
+        ("AD+ assigned escalation", int(multi["TP"]), base.GREEN),
+        ("AD+ assigned obs/reassess", int(multi["FN"]), base.WINE),
+        ("AD- assigned obs/reassess", int(multi["TN"]), base.BLUE),
+        ("AD- assigned escalation", int(multi["FP"]), "#D77A72"),
     ]
     y = np.arange(len(outcome_rows))[::-1]
     maxv = max(v for _, v, _ in outcome_rows)
@@ -570,8 +570,8 @@ def fig_fn_safety(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> None
     ax_c.set_yticks(yy)
     ax_c.set_yticklabels(top["label"], fontsize=6.9)
     ax_c.set_xlim(0, max(top["rate"].max() * 1.35, 10))
-    ax_c.set_xlabel("False-negative rate among AAS-positive patients in subgroup (%)")
-    ax_c.set_title("Full-cohort residual false-negative concentration")
+    ax_c.set_xlabel("Residual reassessment rate among AD-positive patients in subgroup (%)")
+    ax_c.set_title("Full-cohort residual reassessment concentration")
     ax_c.grid(axis="x", color=base.GRID)
     ax_c.grid(axis="y", visible=False)
     ax_c.legend(handles=[Patch(color=color, label=domain) for domain, color in domain_colors.items()],
@@ -612,7 +612,7 @@ def fig_fn_safety_supplement(metrics: pd.DataFrame, preds: dict[str, pd.DataFram
     ax_a.set_yticks(yy)
     ax_a.set_yticklabels(age_plot["age"])
     ax_a.set_xlim(0, max(age_plot["rate"].max() * 1.35, 18))
-    ax_a.set_xlabel("False-negative rate among AAS-positive patients (%)")
+    ax_a.set_xlabel("Residual reassessment rate among AD-positive patients (%)")
     ax_a.set_title("Age-stratified residual miss rate")
     ax_a.grid(axis="x", color=base.GRID)
     ax_a.grid(axis="y", visible=False)
@@ -647,7 +647,7 @@ def fig_fn_safety_supplement(metrics: pd.DataFrame, preds: dict[str, pd.DataFram
     ax_b.set_yticklabels(contrast["feature"])
     ax_b.set_xlim(0, 108)
     ax_b.set_ylim(-0.35, len(contrast) - 0.65)
-    ax_b.set_xlabel("Prevalence among AAS-positive patients (%)")
+    ax_b.set_xlabel("Prevalence among AD-positive patients (%)")
     ax_b.set_title("FN versus TP feature profile")
     ax_b.grid(axis="x", color=base.GRID)
     ax_b.grid(axis="y", visible=False)

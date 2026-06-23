@@ -7,7 +7,7 @@ import pandas as pd
 
 
 def _redact_column(name: str) -> bool:
-    """Omit from LLM-readable evidence: fields that mirror label / AAS wording (avoid perceived leakage)."""
+    """Omit from LLM-readable evidence: fields that mirror label / AD wording (avoid perceived leakage)."""
     c = str(name)
     if c == "text_suggests_aas":
         return True

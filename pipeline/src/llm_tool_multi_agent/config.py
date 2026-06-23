@@ -4,9 +4,9 @@
 
 项目根目录 ``PROJECT_ROOT`` 下应有::
 
-  data/
-    ids/           — 队列 ID 列表
-    cp/            — CP1/CP2/CP2E 宽表 CSV（与主研究同 schema）
+    data/
+    ids/           — 队列 ID 列表（full internal layout）
+    cp/            — CP1/CP2/CP2E 宽表 CSV（full internal layout）
     features/      — ECG：ecg_signals.npy + ecg_signal_ids.csv（可选）
   artifacts/
     policy/        — best_policy_thresholds.json
@@ -38,25 +38,44 @@ PROJECT_ROOT = project_root()
 DATA_DIR = PROJECT_ROOT / "data"
 ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
 MAIN_PROJECT_ROOT = PROJECT_ROOT.parent
+RELEASE_DATA_DIR = MAIN_PROJECT_ROOT / "data"
+RELEASE_COHORT_D_RAW_DIR = RELEASE_DATA_DIR / "raw_data" / "cohort_D"
+RELEASE_COHORT_D_DERIVED_DIR = RELEASE_DATA_DIR / "derived" / "cohort_D"
 MAIN_INTERIM_FEATURE_DIR = MAIN_PROJECT_ROOT / "data" / "interim" / "features"
 
 # 策略与预计算分数（随仓库提供小文件；重训后可覆盖）
 POLICY_JSON = ARTIFACTS_DIR / "policy" / "best_policy_thresholds.json"
-OOF_SCORE_TABLE = ARTIFACTS_DIR / "precomputed" / "datasetA" / "oof_score_table.csv"
-OOF_SCORE_TABLE_CP3_TEXT = ARTIFACTS_DIR / "precomputed" / "datasetA" / "oof_score_table_cp3_text.csv"
+OOF_SCORE_TABLE = _first_existing(
+    ARTIFACTS_DIR / "precomputed" / "datasetA" / "oof_score_table.csv",
+    RELEASE_COHORT_D_DERIVED_DIR / "oof_score_table.csv",
+)
+OOF_SCORE_TABLE_CP3_TEXT = _first_existing(
+    ARTIFACTS_DIR / "precomputed" / "datasetA" / "oof_score_table_cp3_text.csv",
+    RELEASE_COHORT_D_DERIVED_DIR / "oof_score_table_cp3_text.csv",
+)
 
 # 临床路径宽表（用户将 CSV 放入 data/cp/）
-CP_SRC_DIR = DATA_DIR / "cp"
-CP_CSV = {
-    "CP1": "dataset_CP1_demo_history_exam.csv",
-    "CP2": "dataset_CP2_demo_history_exam_lab.csv",
-    "CP2E": "dataset_CP2E_demo_history_exam_lab_echo.csv",
-}
+CP_SRC_DIR = _first_existing(DATA_DIR / "cp", RELEASE_COHORT_D_RAW_DIR)
+if (CP_SRC_DIR / "cohort_D_CP1_demo_history_exam.csv").exists():
+    CP_CSV = {
+        "CP1": "cohort_D_CP1_demo_history_exam.csv",
+        "CP2": "cohort_D_CP2_demo_history_exam_lab.csv",
+        "CP2E": "cohort_D_CP2E_demo_history_exam_lab_echo.csv",
+    }
+else:
+    CP_CSV = {
+        "CP1": "dataset_CP1_demo_history_exam.csv",
+        "CP2": "dataset_CP2_demo_history_exam_lab.csv",
+        "CP2E": "dataset_CP2E_demo_history_exam_lab_echo.csv",
+    }
 
 # 列对齐参考：与推断使用同一套 cp 文件即可（通常为全队列表）
 CP_TRAIN_REF_DIR = CP_SRC_DIR
 
-DATASET_A_IDS = DATA_DIR / "ids" / "datasetA_ids.csv"
+DATASET_A_IDS = _first_existing(
+    DATA_DIR / "ids" / "datasetA_ids.csv",
+    RELEASE_COHORT_D_DERIVED_DIR / "RETAINED_sample_ids.csv",
+)
 DATASET_B_V6_IDS = DATA_DIR / "ids" / "datasetB_v6_ids.csv"
 
 ECG_NPY = DATA_DIR / "features" / "ecg_signals.npy"

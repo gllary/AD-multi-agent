@@ -15,7 +15,7 @@ Feature schema is the union of CP1 / CP2 / CP2E + selected echo:
     D_D_log, NT_proBNP_log, Mb_log, CK_MB_log,
     echo__{ascending_aorta_dilated, aortic_valve_disease, pericardial_effusion,
            suspected_intimal_flap, suggest_aas_on_echo},
-    AAS
+    AAS  # legacy binary label column, interpreted as AD-positive/AD-negative
 
 Cohort sources:
     datasetA       — shared/multi_agent_data/cp_features/dataset_CP2E*.csv
@@ -95,7 +95,7 @@ def load_cohort_features(cohort: str) -> pd.DataFrame:
     # Age numeric
     if "Age" in out.columns:
         out["Age"] = pd.to_numeric(out["Age"], errors="coerce")
-    # Ensure AAS column exists
+    # Ensure the legacy binary label column exists.
     if "AAS" not in out.columns:
         raise RuntimeError(f"AAS column missing in {cohort}")
     out["AAS"] = pd.to_numeric(out["AAS"], errors="coerce").astype("Int64")

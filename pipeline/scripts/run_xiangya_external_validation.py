@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Run Xiangya third-center external validation with ECG text-only CP3."""
+"""Run Xiangya Big Data Platform external validation with ECG text-only CP3."""
 
 from __future__ import annotations
 
@@ -611,12 +611,12 @@ def write_report(
 ) -> None:
     metric_cols = ["AUROC", "AUPRC", "Sensitivity", "Specificity", "PPV", "NPV", "Accuracy", "F1", "MCC"]
     lines = [
-        "# 湘雅医院第三中心外部验证结果",
+        "# 湘雅大数据平台外部验证结果",
         "",
         f"- 输入文件：`{XIANGYA_FINAL_CSV}`",
         f"- 样本量：`{n}`",
-        f"- AAS 阳性：`{n_pos}`",
-        f"- AAS 阴性：`{n - n_pos}`",
+        f"- AD 阳性：`{n_pos}`",
+        f"- AD 阴性：`{n - n_pos}`",
         f"- ECG 分支：`文本版 ECG诊断结论（不使用原始波形）`",
         f"- LLM 模式：`{'live' if llm_live else 'stub'}`",
         "",
@@ -632,7 +632,7 @@ def write_report(
         "",
         "## 说明",
         "",
-        "- CP1 / CP2 / CP4 使用 datasetA 训练好的 LightGBM fold ensemble 在湘雅外部队列上零样本推理。",
+        "- CP1 / CP2 / CP4 使用 datasetA 训练好的 LightGBM fold ensemble 在湘雅大数据平台外部队列上零样本推理。",
         "- CP3 使用已训练的 ECG 文本模型（text-only route）进行外推，不使用 ECG 原始波形。",
         "- 动态 multi-agent、single-agent 和 canonical baseline 共享同一套 policy thresholds。",
     ]

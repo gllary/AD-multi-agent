@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+title: "A safety-governed multi-agent framework for pre-CTA triage of suspected acute aortic dissection"
+message: "If you use this software or the accompanying release materials, please cite the associated manuscript and this code release."
+type: software
+authors:
+  - name: "AD multi-agent study authors"
+repository-code: "https://github.com/gllary/AAS-multi-agent"
+date-released: 2026-06-16
+license: MIT
+abstract: "Code and release materials for a safety-governed multi-agent framework for suspected acute aortic dissection pre-CTA triage research."
+preferred-citation:
+  type: article
+  title: "A safety-governed multi-agent framework for pre-CTA triage of suspected acute aortic dissection"
+  authors:
+    - name: "AD multi-agent study authors"
+  year: 2026
+  journal: "Manuscript in preparation/submission"

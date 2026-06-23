@@ -1,12 +1,12 @@
-# AAS Multi-Agent Code Release Bundle
+# AD Multi-Agent Code Release Bundle
 
 This folder is a scoped release copy for the manuscript:
 
-**Safety-governed multi-agent pathway control for suspected acute aortic syndrome: a retrospective external evaluation**
+**A safety-governed multi-agent framework for pre-CTA triage of suspected acute aortic dissection**
 
 It keeps only materials aligned with the current manuscript narrative:
 
-- Frozen safety-governed Qwen multi-agent, single-agent, and canonical pathway-control code.
+- Frozen safety-governed Qwen multi-agent, single-agent, and canonical pathway-support code.
 - Frozen quantitative model artifacts and policy thresholds.
 - Current manuscript figure/table generation scripts.
 - PHI-stripped frozen prompt templates.
@@ -14,11 +14,22 @@ It keeps only materials aligned with the current manuscript narrative:
 
 It intentionally excludes historical exploratory runs, obsolete figure sets, unrestricted validation-cohort raw data, LLM call logs, cache files, pycache files, and intermediate output directories.
 
+## Intended Use
+
+This repository is for research transparency, reproducibility review, and
+software inspection. It is not clinical-use software, not a medical device, and
+not a prospective triage protocol.
+
+The public source tree supports the frozen Cohort D development-boundary
+materials and manuscript figure/table scripts. External validation reproduction
+requires controlled access to restricted institutional datasets that are not
+included in this repository.
+
 ## Related Article
 
 This code release is associated with the manuscript:
 
-**Safety-governed multi-agent pathway control for suspected acute aortic syndrome: a retrospective external evaluation**
+**A safety-governed multi-agent framework for pre-CTA triage of suspected acute aortic dissection**
 
 Manuscript materials included in this bundle:
 
@@ -32,8 +43,8 @@ Manuscript materials included in this bundle:
 Current manuscript alignment:
 
 - Cohort V2 final analysis set: n = 15,109.
-- Cohort V2 AAS-positive cases: n = 4,067.
-- Multi-agent residual AAS-positive reassessment/missed cases: n = 123.
+- Cohort V2 AD-positive cases: n = 4,067.
+- Multi-agent residual AD-positive clinician-overseen reassessment cases: n = 123.
 - Negative labels were assigned after physician record review plus individual telephone follow-up in May 2026.
 
 Article status: manuscript/submission draft; journal, DOI, and final citation information are pending. Please update this section after acceptance or public preprint posting.
@@ -41,16 +52,16 @@ Article status: manuscript/submission draft; journal, DOI, and final citation in
 Suggested citation before DOI assignment:
 
 ```text
-Authors. Safety-governed multi-agent pathway control for suspected acute aortic syndrome:
-a retrospective external evaluation. Manuscript in preparation/submission, 2026.
+Authors. A safety-governed multi-agent framework for pre-CTA triage of suspected
+acute aortic dissection. Manuscript in preparation/submission, 2026.
 Code release: AAS_multi_agent.
 ```
 
 BibTeX placeholder:
 
 ```bibtex
-@unpublished{aas_pathway_control_2026,
-  title  = {Safety-governed multi-agent pathway control for suspected acute aortic syndrome: a retrospective external evaluation},
+@unpublished{ad_multi_agent_triage_2026,
+  title  = {A safety-governed multi-agent framework for pre-CTA triage of suspected acute aortic dissection},
   author = {Authors},
   year   = {2026},
   note   = {Manuscript in preparation/submission; code release: AAS\_multi\_agent}
@@ -62,6 +73,26 @@ BibTeX placeholder:
 Source code in `pipeline/` and `analysis/` is released under the MIT License. See `LICENSE`.
 
 The de-identified Cohort D files in `data/`, source code, and supplementary materials are provided to support research transparency and reproducibility for the associated article. They are not clinical-use software, medical-device materials, or a prospective triage protocol. Use of data and manuscript materials remains subject to the ethics, data-governance, journal, and citation requirements described in the associated article.
+
+## Quick Start
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r pipeline/requirements.txt
+python -m pip install -e pipeline
+```
+
+Run a small Cohort D pathway smoke test:
+
+```bash
+cd pipeline
+python scripts/run_pathway.py --cohort datasetA --limit 10
+```
+
+Live LLM calls require credentials supplied through environment variables. See
+`.env.example`; do not commit real credentials.
 
 ## Layout
 
@@ -79,6 +110,9 @@ AAS_multi_agent/
 ├── data/
 │   ├── raw_data/cohort_D/       # retained Cohort D CP1/CP2/CP2E inputs
 │   └── derived/cohort_D/        # retained IDs, final predictions, metrics, OOF scores
+├── CITATION.cff                 # citation metadata
+├── CONTRIBUTING.md              # contribution and frozen-result guidance
+├── SECURITY.md                  # security, credential, and data-boundary policy
 ├── supplementary_file_*.txt      # PHI-stripped prompt and audit supplements
 └── supplementary_data_*.xlsx     # bootstrap, runtime trace, and inventory workbooks
 ```
@@ -92,6 +126,12 @@ AAS_multi_agent/
 - `cohort_D_CP2E_demo_history_exam_lab_echo.csv`
 
 `data/derived/cohort_D/` contains retained IDs, final action-level predictions/metrics, and OOF score tables used to document the frozen development boundary.
+
+Some retained CSV files and code paths still use the legacy binary label column
+name `AAS` for compatibility with the frozen development pipeline. In the
+release documentation and associated manuscript, the clinical target is acute
+aortic dissection (AD); the legacy column should be interpreted as the
+AD-positive/AD-negative reference label for these released tables.
 
 ## Exclusions
 

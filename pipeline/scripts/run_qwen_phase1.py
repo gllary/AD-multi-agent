@@ -11,7 +11,7 @@ This file is the runner template, copied into each generated bundle as
         dataset_CP2_demo_history_exam_lab.csv
         dataset_CP2E_demo_history_exam_lab_echo.csv
       inputs/
-        model_input.csv                   ← 19-col schema, required for ECG-text + AAS labels
+        model_input.csv                   ← 19-col schema, required for ECG-text + legacy `AAS` label column
       artifacts/
         policy/, precomputed/, models/{lgbm, cp3_text}
       src/llm_tool_multi_agent/
@@ -173,7 +173,7 @@ def _make_qwen_build_ecg_text_features(qwen_ecg_json_path: pathlib.Path):
     }
 
     def _qwen_aware_build_ecg_text_features(final_df: pd.DataFrame):
-        # Run the original regex builder to get kw_*, ecg_diagnosis_text, AAS,
+        # Run the original regex builder to get kw_*, ecg_diagnosis_text, legacy AAS label column,
         # and a regex-derived stub for ecg_text_*. We'll overwrite the latter.
         import run_xiangya_external_validation as runner  # local import
         ecg_text_csv, ecg_feat_df = runner._orig_build_ecg_text_features(final_df)
