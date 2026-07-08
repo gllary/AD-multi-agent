@@ -73,21 +73,23 @@ V2, Final multi-agent accepted action, 15,109, 3,944, 7,990, 3,052, 123, 0.970, 
 V2, Aortic Dissection Detection Risk Score (ADD-RS) >=1, 15,109, 3,866, 5,486, 5,556, 201, 0.951, 0.497, 0.410, 0.965, 0.619, 0.573, 0.410
 V2, ADvISED-style, 15,109, 3,727, 4,366, 6,676, 340, 0.916, 0.395, 0.358, 0.928, 0.536, 0.515, 0.299
 
-Section D. Residual AD-positive reassessment Stanford-classification audit
+Section D. Residual AD-positive clinician-overseen reassessment Stanford-classification audit
 
-Residual false negatives are AD-positive patients assigned clinician-overseen reassessment rather than direct CTA or urgent pathway escalation in the final V2 analysis set. Stanford classification was reviewed using the same residual-safety definition as the manuscript and supplement.
+Residual AD-positive clinician-overseen reassessment assignments are AD-positive patients assigned clinician-overseen reassessment rather than direct CTA or urgent pathway escalation in the final V2 analysis set. Stanford classification was reviewed using the same residual action-assignment definition as the manuscript and supplement.
 
-Method, Stanford A, Stanford B, Unphenotyped/indeterminate AD, Worst-case Stanford A upper bound, Total residual AD-positive reassessment
+Method, Confirmed Stanford A, Stanford B, Unphenotyped/indeterminate AD, Worst-case Stanford A-risk upper bound, Total residual AD-positive clinician-overseen reassessment
 Aortic Dissection Detection Risk Score (ADD-RS) >=1, 24, 99, 21, 45, 201
 Canonical threshold route, 21, 92, 23, 44, 196
 Single-agent baseline, 39, 107, 23, 62, 232
 Final multi-agent accepted action, 10, 60, 12, 22, 123
 
+The worst-case Stanford A-risk upper bound treats all unphenotyped/indeterminate AD residual clinician-overseen reassessment records as Stanford A for conservative action-assignment accounting. It is not a count of confirmed Stanford A cases.
+
 Section E. Direct-CTA reassignment audit
 
-The largest de-escalation route consisted of patients assigned direct CTA by the canonical threshold pathway but clinician-overseen reassessment by the final multi-agent controller.
+The largest direct-CTA-to-clinician-overseen-reassessment route consisted of patients assigned direct CTA by the canonical threshold pathway but clinician-overseen reassessment by the final multi-agent controller.
 
 Audit domain, Count / denominator, Interpretation
 Canonical direct CTA to multi-agent clinician-overseen reassessment, 1,071 / 15,109, Largest direct-CTA reassignment route in Cohort V2.
-AD-positive / AD-negative in this subgroup, 0 / 1,071; 1,071 / 1,071, Reassignment reduced false-positive assigned escalation in retrospective policy simulation; no adjudicated AD-positive patient was reassigned through this route.
+AD-positive / AD-negative in this subgroup, 0 / 1,071; 1,071 / 1,071, Reassignment was associated with fewer AD-negative assigned escalation cases as a retrospective lower-yield escalation proxy; no adjudicated AD-positive patient was reassigned through this route.
 Canonical direct-CTA subgroup, 6,538 total; 1,071 reassigned (16.4%), Terminal-action agreement after reassignment remained 83.6% overall.
