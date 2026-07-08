@@ -53,13 +53,13 @@ Frozen setting or handling rule: Full chain-of-thought was not requested or used
 
 Section B. Submission-facing safety-governance audit summary
 
-The final Cohort V2 denominator is the CSV-defined analysis set: 15,109 patient encounters, including 4,067 AD-positive and 11,042 AD-negative records. AD-negative labels were assigned after physician record review plus individual telephone follow-up in May 2026 before final labelling. This file reports the final V2 denominator and related action-level summaries.
+The final Cohort V2 denominator is the CSV-defined analysis set: 15,109 patient encounters, including 4,067 AD-positive and 11,042 AD-negative records. AD-negative labels were assigned after physician record review plus individual telephone follow-up verification that began in December 2025 and was completed in May 2026 before final labelling. This file reports the final V2 denominator and related action-level summaries.
 
 Cohort, Audit domain, Denominator, Summary
 D, Stage-level safety governance, 1,010, Frozen development-cohort stage-trace audit summarised in Supplementary Data 2.
 V1, Stage-level safety governance, 173, Frozen first-validation stage-trace audit summarised in Supplementary Data 2.
 V2, Final action-level governance, 15,109, Final accepted action after deterministic safety governance is evaluated on the CSV-defined patient set.
-V2, Reference-standard confirmation, 15,109, AD-positive 4,067; AD-negative 11,042; every candidate negative label had individual May 2026 telephone follow-up before final labelling.
+V2, Reference-standard confirmation, 15,109, AD-positive 4,067; AD-negative 11,042; every candidate negative label had individual telephone follow-up verification that began in December 2025 and was completed in May 2026 before final labelling.
 V2, Direct-CTA reassignment audit, 1,071 / 15,109, Canonical direct-CTA cases reassigned by the multi-agent controller to clinician-overseen reassessment; 0 AD-positive cases in this subgroup.
 
 Section C. Final Cohort V2 route metrics

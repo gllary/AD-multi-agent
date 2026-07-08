@@ -1,8 +1,8 @@
-stratum,stratum_share_of_all_negatives,method,n_negatives,false_positive_assigned_escalation,true_negative_reassessment,specificity_within_negative_stratum,false_positive_escalation_rate,direct_cta,urgent_transfer,observe_or_reassess
-overall_final_AAS_negative,1.0,ADD-RS >=1,11042,5556,5486,0.4968302843687738,0.5031697156312263,,,5486
-overall_final_AAS_negative,1.0,Canonical threshold,11042,4175,6867,0.6218982068465858,0.37810179315341425,3473,702,6867
-overall_final_AAS_negative,1.0,Single-agent,11042,3362,7680,0.6955261727947836,0.30447382720521643,3196,166,7680
-overall_final_AAS_negative,1.0,Multi-agent,11042,3052,7990,0.723600796957073,0.27639920304292703,2953,99,7990
+stratum,stratum_share_of_all_negatives,method,n_negatives,ad_negative_assigned_escalation,ad_negative_clinician_overseen_reassessment,specificity_within_negative_stratum,ad_negative_assigned_escalation_rate,direct_cta_pathway,urgent_specialist_transfer_pathway_escalation,clinician_overseen_reassessment
+overall_final_ad_negative,1.0,ADD-RS >=1,11042,5556,5486,0.4968302843687738,0.5031697156312263,,,5486
+overall_final_ad_negative,1.0,Canonical threshold,11042,4175,6867,0.6218982068465858,0.37810179315341425,3473,702,6867
+overall_final_ad_negative,1.0,Single-agent,11042,3362,7680,0.6955261727947836,0.30447382720521643,3196,166,7680
+overall_final_ad_negative,1.0,Multi-agent,11042,3052,7990,0.723600796957073,0.27639920304292703,2953,99,7990
 cta_mra_retained_negative,0.10152146350298859,ADD-RS >=1,1121,744,377,0.33630686886708294,0.6636931311329171,,,377
 cta_mra_retained_negative,0.10152146350298859,Canonical threshold,1121,687,434,0.3871543264942016,0.6128456735057984,479,208,434
 cta_mra_retained_negative,0.10152146350298859,Single-agent,1121,595,526,0.46922390722569135,0.5307760927743087,556,39,526

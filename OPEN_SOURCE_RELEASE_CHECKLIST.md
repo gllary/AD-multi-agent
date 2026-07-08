@@ -8,7 +8,7 @@ Use this checklist before making a public release.
   - Cohort V2 final analysis set: n = 15,109.
   - Cohort V2 AD-positive cases: n = 4,067.
   - Multi-agent residual AD-positive clinician-overseen reassessment cases: n = 123.
-  - Negative labels include physician record review plus May 2026 telephone follow-up.
+  - AD-negative labels include physician record review plus individual telephone follow-up verification that began in December 2025 and was completed in May 2026.
 - Confirm no live credentials are present:
 
 ```bash

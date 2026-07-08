@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "llm-tool-multi-agent"
 version = "0.2.0"
-description = "Tool-augmented LLM multi-agent pathway for suspected acute aortic dissection pre-CTA triage (self-contained layout)"
+description = "Tool-augmented LLM multi-agent pathway support for suspected acute aortic dissection before CTA (self-contained layout)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

@@ -2,7 +2,7 @@
 
 This folder is a scoped release copy for the manuscript:
 
-**A safety-governed multi-agent framework for pre-CTA triage of suspected acute aortic dissection**
+**Safety governed pathway support for suspected acute aortic dissection before computed tomography angiography**
 
 It keeps only materials aligned with the current manuscript narrative:
 
@@ -12,7 +12,8 @@ It keeps only materials aligned with the current manuscript narrative:
 - PHI-stripped frozen prompt templates.
 - De-identified Cohort D retained analysis data.
 
-It intentionally excludes historical exploratory runs, obsolete figure sets, unrestricted validation-cohort raw data, LLM call logs, cache files, pycache files, and intermediate output directories.
+It excludes restricted validation data, protected health information, credentials,
+runtime logs, and non-release working materials.
 
 ## Intended Use
 
@@ -29,7 +30,7 @@ included in this repository.
 
 This code release is associated with the manuscript:
 
-**A safety-governed multi-agent framework for pre-CTA triage of suspected acute aortic dissection**
+**Safety governed pathway support for suspected acute aortic dissection before computed tomography angiography**
 
 Manuscript materials included in this bundle:
 
@@ -38,33 +39,38 @@ Manuscript materials included in this bundle:
 - `supplementary_file_3_safety_governance_runtime_audit_details.txt`
 - `supplementary_data_1_full_performance_metrics_bootstrap_paired_contrasts.xlsx`
 - `supplementary_data_2_runtime_governance_trace_logs.xlsx`
-- `supplementary_data_3_prompt_schema_config_freeze_inventory.xlsx`
+- `supplementary_data_3_stage_models_thresholds_calibration_missingness.xlsx`
+- `supplementary_data_4_cohort_v2_negative_strata_metrics.csv`
+
+The file `release_prompt_schema_config_freeze_inventory.xlsx` is retained as
+release-only implementation documentation and is not numbered as a journal
+Supplementary Data file.
 
 Current manuscript alignment:
 
 - Cohort V2 final analysis set: n = 15,109.
 - Cohort V2 AD-positive cases: n = 4,067.
 - Multi-agent residual AD-positive clinician-overseen reassessment cases: n = 123.
-- Negative labels were assigned after physician record review plus individual telephone follow-up in May 2026.
+- AD-negative labels were assigned after physician record review plus individual telephone follow-up verification that began in December 2025 and was completed in May 2026.
 
 Article status: manuscript/submission draft; journal, DOI, and final citation information are pending. Please update this section after acceptance or public preprint posting.
 
 Suggested citation before DOI assignment:
 
 ```text
-Authors. A safety-governed multi-agent framework for pre-CTA triage of suspected
-acute aortic dissection. Manuscript in preparation/submission, 2026.
-Code release: AAS_multi_agent.
+Authors. Safety governed pathway support for suspected acute aortic dissection
+before computed tomography angiography. Manuscript in preparation/submission,
+2026. Associated code release.
 ```
 
 BibTeX placeholder:
 
 ```bibtex
 @unpublished{ad_multi_agent_triage_2026,
-  title  = {A safety-governed multi-agent framework for pre-CTA triage of suspected acute aortic dissection},
+  title  = {Safety governed pathway support for suspected acute aortic dissection before computed tomography angiography},
   author = {Authors},
   year   = {2026},
-  note   = {Manuscript in preparation/submission; code release: AAS\_multi\_agent}
+  note   = {Manuscript in preparation/submission; associated code release}
 }
 ```
 
@@ -97,7 +103,7 @@ Live LLM calls require credentials supplied through environment variables. See
 ## Layout
 
 ```text
-AAS_multi_agent/
+repository-root/
 ├── pipeline/
 │   ├── scripts/                 # frozen pathway/evaluation entry points
 │   ├── src/                     # llm_tool_multi_agent package
@@ -114,7 +120,9 @@ AAS_multi_agent/
 ├── CONTRIBUTING.md              # contribution and frozen-result guidance
 ├── SECURITY.md                  # security, credential, and data-boundary policy
 ├── supplementary_file_*.txt      # PHI-stripped prompt and audit supplements
-└── supplementary_data_*.xlsx     # bootstrap, runtime trace, and inventory workbooks
+├── supplementary_data_*.xlsx     # bootstrap, runtime trace, and model-freeze workbooks
+├── supplementary_data_4_*.csv    # Cohort V2 AD-negative evidence-stratum metrics
+└── supplementary_data_4_*.manifest.txt
 ```
 
 ## Cohort D Data Boundary
@@ -127,24 +135,15 @@ AAS_multi_agent/
 
 `data/derived/cohort_D/` contains retained IDs, final action-level predictions/metrics, and OOF score tables used to document the frozen development boundary.
 
-Some retained CSV files and code paths still use the legacy binary label column
-name `AAS` for compatibility with the frozen development pipeline. In the
-release documentation and associated manuscript, the clinical target is acute
-aortic dissection (AD); the legacy column should be interpreted as the
-AD-positive/AD-negative reference label for these released tables.
+The retained Cohort D CSV headers and frozen code paths deliberately preserve
+the legacy binary label column name `AAS` for compatibility with the locked
+development pipeline. This is a compatibility artifact, not a change in the
+clinical target; in the release documentation and associated manuscript, that
+column denotes the AD-positive/AD-negative reference label.
 
 ## Exclusions
 
-The current manuscript states that Cohort V1 and Xiangya validation data cannot be publicly released because of institutional review board and hospital data-governance restrictions. Accordingly, this bundle does not include raw external validation inputs, V2 model-input tables, LLM output traces, or unrestricted hospital data.
-
-The following local exploratory directories were not copied because they are not part of the clean release narrative:
-
-- `cohort_*_raw_exploratory/run_*.py`
-- historical generated `paper_figures/figures_*` variants; `build_figures_0529.py` is retained only because the current `build_figures_0530.py` wrapper imports it as its plotting base
-- `phase1_qwen_*_bundle/outputs/`
-- `llm_pipeline_v1/outputs/`
-- labeling workspaces and annotation logs
-
-## Notes
-
-Some analysis scripts retain references to restricted external validation inputs from the original local project. Those inputs are intentionally absent here; the scripts document the exact current-generation pipeline and use the current Cohort V2 denominator (n = 15,109), while external-cohort reproduction requires approved controlled-platform access.
+Raw external validation inputs, V2 model-input tables, patient-level LLM traces,
+and unrestricted hospital data are not included because they are governed by
+institutional review board and hospital data-governance restrictions. External
+validation reproduction therefore requires approved controlled-platform access.
