@@ -117,8 +117,7 @@ repository-root/
 ├── SECURITY.md                  # security, credential, and data-boundary policy
 ├── supplementary_file_*.txt      # PHI-stripped prompt and audit supplements
 ├── supplementary_data_*.xlsx     # bootstrap, runtime trace, and model-freeze workbooks
-├── supplementary_data_4_*.csv    # Cohort V2 AD-negative evidence-stratum metrics
-└── supplementary_data_4_*.manifest.txt
+└── supplementary_data_4_*.csv    # Cohort V2 AD-negative evidence-stratum metrics
 ```
 
 ## Cohort D Data Boundary
