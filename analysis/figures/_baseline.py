@@ -14,8 +14,8 @@ Feature schema is the union of CP1 / CP2 / CP2E + selected echo:
     troponin_abnormal, D_D_abnormal,
     D_D_log, NT_proBNP_log, Mb_log, CK_MB_log,
     echo__{ascending_aorta_dilated, aortic_valve_disease, pericardial_effusion,
-           suspected_intimal_flap, suggest_aas_on_echo},
-    AAS  # legacy binary label column, interpreted as AD-positive/AD-negative
+           suspected_intimal_flap, suggest_ad_on_echo},
+    AD  # binary reference label column, interpreted as AD-positive/AD-negative
 
 Cohort sources:
     datasetA       — shared/multi_agent_data/cp_features/dataset_CP2E*.csv
@@ -33,7 +33,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(os.environ.get("AAS_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
+ROOT = Path(os.environ.get("AD_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
 
 CP2E_PATHS = {
     "datasetA":      ROOT / "shared/multi_agent_data/cp_features/dataset_CP2E_demo_history_exam_lab_echo.csv",
@@ -62,7 +62,7 @@ BIN_FEATURES = [
     "troponin_abnormal", "D_D_abnormal",
     "echo__ascending_aorta_dilated", "echo__aortic_valve_disease",
     "echo__pericardial_effusion", "echo__suspected_intimal_flap",
-    "echo__suggest_aas_on_echo",
+    "echo__suggest_ad_on_echo",
 ]
 
 
@@ -95,16 +95,16 @@ def load_cohort_features(cohort: str) -> pd.DataFrame:
     # Age numeric
     if "Age" in out.columns:
         out["Age"] = pd.to_numeric(out["Age"], errors="coerce")
-    # Ensure the legacy binary label column exists.
-    if "AAS" not in out.columns:
-        raise RuntimeError(f"AAS column missing in {cohort}")
-    out["AAS"] = pd.to_numeric(out["AAS"], errors="coerce").astype("Int64")
+    # Ensure the binary AD reference label column exists.
+    if "AD" not in out.columns:
+        raise RuntimeError(f"AD column missing in {cohort}")
+    out["AD"] = pd.to_numeric(out["AD"], errors="coerce").astype("Int64")
     return out
 
 
 if __name__ == "__main__":
     for c in CP2E_PATHS:
         df = load_cohort_features(c)
-        pos = int((df["AAS"] == 1).sum())
-        neg = int((df["AAS"] == 0).sum())
+        pos = int((df["AD"] == 1).sum())
+        neg = int((df["AD"] == 0).sum())
         print(f"{c:>15} | n={len(df):5d} pos={pos:5d} neg={neg:5d}")

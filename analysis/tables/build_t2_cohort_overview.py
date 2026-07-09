@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(os.environ.get("AAS_PROJECT_ROOT", Path(__file__).resolve().parents[2]))
+ROOT = Path(os.environ.get("AD_PROJECT_ROOT", Path(__file__).resolve().parents[2]))
 sys.path.insert(0, str(ROOT / "analysis" / "figures"))
 from _data import COHORT_META, COHORT_ORDER, load_predictions  # noqa: E402
 
@@ -105,8 +105,8 @@ def main() -> None:
             f"{r['label_sop']} | {r['study_role_note']} |\n"
         )
     md.append("\n")
-    md.append("*AD, acute aortic dissection. The retained CSV schema uses the legacy "
-              "`AAS` binary label column for compatibility with frozen scripts.*\n")
+    md.append("*AD, acute aortic dissection. The retained CSV schema uses `AD` as "
+              "the binary reference-label column.*\n")
 
     (OUT / "T2_cohort_overview.md").write_text("".join(md))
 

@@ -64,7 +64,7 @@ ECHO_COLUMNS = LAB_COLUMNS + (
     "echo__aortic_valve_disease",
     "echo__pericardial_effusion",
     "echo__suspected_intimal_flap",
-    "echo__suggest_aas_on_echo",
+    "echo__suggest_ad_on_echo",
 )
 
 ECG_MEASUREMENT_COLUMNS = (

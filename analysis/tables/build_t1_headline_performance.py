@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(os.environ.get("AAS_PROJECT_ROOT", Path(__file__).resolve().parents[2]))
+ROOT = Path(os.environ.get("AD_PROJECT_ROOT", Path(__file__).resolve().parents[2]))
 sys.path.insert(0, str(ROOT / "analysis" / "figures"))
 from _data import COHORT_META, COHORT_ORDER, METHOD_ORDER, load_predictions  # noqa: E402
 from _metrics import bootstrap_metrics, point_metrics  # noqa: E402

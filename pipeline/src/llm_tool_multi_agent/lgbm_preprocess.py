@@ -9,26 +9,26 @@ import numpy as np
 import pandas as pd
 
 _TEXT_PROXY_SUFFIXES = (
-    "__text_suggests_aas",
+    "__text_suggests_ad",
     "__text_suggests_ais",
     "__text_suggests_aos",
 )
 
 
-def column_is_aas_proxy_leakage(col: str) -> bool:
+def column_is_ad_proxy_leakage(col: str) -> bool:
     c = str(col)
-    if c == "text_suggests_aas":
+    if c == "text_suggests_ad":
         return True
     cl = c.lower()
     if any(cl.endswith(s) for s in _TEXT_PROXY_SUFFIXES):
         return True
-    if "suggest_aas" in cl:
+    if "suggest_ad" in cl:
         return True
     return False
 
 
 def drop_leakage_cols(df: pd.DataFrame) -> pd.DataFrame:
-    leak = [c for c in df.columns if column_is_aas_proxy_leakage(c)]
+    leak = [c for c in df.columns if column_is_ad_proxy_leakage(c)]
     if leak:
         df = df.drop(columns=leak)
     return df
@@ -88,16 +88,16 @@ LLM_PREFIXES = ("history__", "exam__", "echo__", "ecg__", "iab__")
 def add_missing_indicators(X: pd.DataFrame) -> pd.DataFrame:
     X = X.copy()
     for c in list(X.columns):
-        if any(c.startswith(p) for p in LLM_PREFIXES) and not column_is_aas_proxy_leakage(c):
+        if any(c.startswith(p) for p in LLM_PREFIXES) and not column_is_ad_proxy_leakage(c):
             miss_col = f"{c}_missing"
             if miss_col not in X.columns:
                 X[miss_col] = X[c].isna().astype(float)
     return X
 
 
-_AAS_LABEL_MAP = {
-    "aas_positive": 1,
-    "aas_negative": 0,
+_AD_LABEL_MAP = {
+    "ad_positive": 1,
+    "ad_negative": 0,
     "1": 1,
     "0": 0,
     "1.0": 1,
@@ -107,20 +107,20 @@ _AAS_LABEL_MAP = {
 }
 
 
-def encode_aas_label(series: pd.Series) -> np.ndarray:
+def encode_ad_label(series: pd.Series) -> np.ndarray:
     lower = series.astype(str).str.strip().str.lower()
-    mapped = lower.map(_AAS_LABEL_MAP)
+    mapped = lower.map(_AD_LABEL_MAP)
     if mapped.isna().any():
         mapped = pd.to_numeric(series, errors="coerce")
     return mapped.astype(int).values
 
 
-def load_xy(csv_path: str, label_col: str = "AAS", id_col: str = "ID"):
+def load_xy(csv_path: str, label_col: str = "AD", id_col: str = "ID"):
     df = pd.read_csv(csv_path)
     if label_col not in df.columns:
         raise ValueError(f"标签列 '{label_col}' 不存在: {csv_path}")
     df = drop_leakage_cols(df)
-    y = encode_aas_label(df[label_col])
+    y = encode_ad_label(df[label_col])
     drop = [label_col] + ([id_col] if id_col in df.columns else [])
     X = df.drop(columns=drop)
     X = encode_llm_string_columns(X)

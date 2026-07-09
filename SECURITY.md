@@ -26,6 +26,8 @@ The code expects API keys to be supplied through environment variables such as
 
 ## Data Handling
 
-Only the de-identified Cohort D release tables are included. Cohort V1 and V2
+Only the de-identified Cohort D release tables are included. The public Cohort D
+`ID` column contains release-only pseudonymous identifiers, not hospital,
+encounter, medical-record, or platform identifiers. Cohort V1 and V2
 raw validation inputs, LLM call logs, cache files, and unrestricted hospital
 data are intentionally excluded.

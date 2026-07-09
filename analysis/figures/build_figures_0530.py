@@ -21,12 +21,12 @@ import pandas as pd
 import build_figures_0529 as base
 
 
-ROOT = Path(os.environ.get("AAS_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
-FIGURE_SET = os.environ.get("AAS_FIGURE_SET", "figures_0530")
+ROOT = Path(os.environ.get("AD_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
+FIGURE_SET = os.environ.get("AD_FIGURE_SET", "figures_0530")
 OUT = ROOT / "paper_figures" / FIGURE_SET
 AUDIT_OUT = ROOT / "paper_figures" / f"{FIGURE_SET}_audit"
 SOURCE_OUT = ROOT / "paper_figures" / "figures_0529"
-FROZEN_ID_FILE = os.environ.get("AAS_COHORT_V2_FROZEN_IDS")
+FROZEN_ID_FILE = os.environ.get("AD_COHORT_V2_FROZEN_IDS")
 
 MERGED_KEY = "V2"
 MERGED_COHORTS = ["V2", "V3"]
@@ -320,7 +320,7 @@ def fig_study_design(metrics: pd.DataFrame) -> None:
     # B. Frozen development.
     panel(0.020, 0.390, 0.455, 0.285, "b", "Development and freezing on Cohort D")
     dev_steps = [
-        ("Cohort D", f"n={int(summary.loc['D', 'n']):,}\nAAS+ {summary.loc['D', 'prevalence']:.1%}", base.COHORT_COLORS["D"]),
+        ("Cohort D", f"n={int(summary.loc['D', 'n']):,}\nAD+ {summary.loc['D', 'prevalence']:.1%}", base.COHORT_COLORS["D"]),
         ("Stage models", "LightGBM\nCP1/2/4\nLR ECG concepts", risk),
         ("Prompt system", "specialist roles\ncoordinator\nJSON schema", agents),
         ("Policy freeze", "thresholds\nlegal actions\nfallbacks", guard),
@@ -450,8 +450,8 @@ def fig_operational_burden(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]
 
 def _merged_feature_predictions(preds: dict[str, pd.DataFrame]) -> pd.DataFrame:
     features = current_features(MERGED_KEY, preds)
-    if "label" not in features.columns and "AAS" in features.columns:
-        features["label"] = features["AAS"].astype(int)
+    if "label" not in features.columns and "AD" in features.columns:
+        features["label"] = features["AD"].astype(int)
     pred = preds[MERGED_KEY].copy()
     df = pred.merge(features, on=["ID", "label"], how="left")
     df["age_bin"] = pd.cut(

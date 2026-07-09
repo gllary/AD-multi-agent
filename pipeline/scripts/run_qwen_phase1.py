@@ -11,7 +11,7 @@ This file is the runner template, copied into each generated bundle as
         dataset_CP2_demo_history_exam_lab.csv
         dataset_CP2E_demo_history_exam_lab_echo.csv
       inputs/
-        model_input.csv                   ← 19-col schema, required for ECG-text + legacy `AAS` label column
+        model_input.csv                   ← 19-col schema, required for ECG-text + `AD` label column
       artifacts/
         policy/, precomputed/, models/{lgbm, cp3_text}
       src/llm_tool_multi_agent/
@@ -148,7 +148,7 @@ def _make_qwen_build_ecg_text_features(qwen_ecg_json_path: pathlib.Path):
 
     The CP3 text model's `feature_spec.json` expects categorical columns
     `ecg_text_{st_elevation, st_depression, arrhythmia, acs_like_ecg,
-    text_suggests_aas}` whose values at TRAINING time came from the Qwen
+    text_suggests_ad}` whose values at TRAINING time came from the Qwen
     ECG-text JSON (`data/interim/features/ecg_text.json` → loader adds the
     `ecg_text_` prefix; see `train_cp3_text_model.py:_load_structured_text`).
 
@@ -169,11 +169,11 @@ def _make_qwen_build_ecg_text_features(qwen_ecg_json_path: pathlib.Path):
         "ecg_text_st_depression":     "st_depression",
         "ecg_text_arrhythmia":        "arrhythmia",
         "ecg_text_acs_like_ecg":      "acs_like_ecg",
-        "ecg_text_text_suggests_aas": "text_suggests_aas",
+        "ecg_text_text_suggests_ad": "text_suggests_ad",
     }
 
     def _qwen_aware_build_ecg_text_features(final_df: pd.DataFrame):
-        # Run the original regex builder to get kw_*, ecg_diagnosis_text, legacy AAS label column,
+        # Run the original regex builder to get kw_*, ecg_diagnosis_text, AD label column,
         # and a regex-derived stub for ecg_text_*. We'll overwrite the latter.
         import run_xiangya_external_validation as runner  # local import
         ecg_text_csv, ecg_feat_df = runner._orig_build_ecg_text_features(final_df)

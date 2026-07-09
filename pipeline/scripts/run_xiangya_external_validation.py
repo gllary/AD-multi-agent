@@ -143,16 +143,16 @@ def build_cp_tables(final_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame,
     df["_echo_text"] = echo_text
     df["_ecg_text"] = df["ECG诊断结论"].map(_s)
 
-    high_aas_history = [
+    high_ad_history = [
         r"主动脉夹层", r"撕裂样", r"刀割样", r"胸背痛", r"胸腹痛", r"壁间血肿", r"穿透性溃疡",
     ]
-    medium_aas_history = [
+    medium_ad_history = [
         r"突发", r"突然", r"急性起病", r"放射痛", r"迁移", r"主动脉瘤", r"马凡", r"结缔组织",
     ]
-    high_aas_exam = [r"双上肢血压.*差", r"脉搏.*不对称", r"主动脉瓣.*返流", r"休克", r"低血压"]
-    medium_aas_exam = [r"杂音", r"神经功能缺失", r"偏瘫", r"晕厥"]
-    high_aas_echo = [r"主动脉夹层", r"内膜片", r"双腔", r"真假腔", r"壁间血肿"]
-    medium_aas_echo = [r"升主动脉.*增宽", r"主动脉内径增宽", r"升主动脉扩张", r"主动脉窦部高值", r"心包积液"]
+    high_ad_exam = [r"双上肢血压.*差", r"脉搏.*不对称", r"主动脉瓣.*返流", r"休克", r"低血压"]
+    medium_ad_exam = [r"杂音", r"神经功能缺失", r"偏瘫", r"晕厥"]
+    high_ad_echo = [r"主动脉夹层", r"内膜片", r"双腔", r"真假腔", r"壁间血肿"]
+    medium_ad_echo = [r"升主动脉.*增宽", r"主动脉内径增宽", r"升主动脉扩张", r"主动脉窦部高值", r"心包积液"]
 
     cp1 = pd.DataFrame(
         {
@@ -173,7 +173,7 @@ def build_cp_tables(final_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame,
             "exam__hypotension_or_shock": df["_exam_text"].map(_parse_hypotension),
             "exam__text_suggests_ais": np.nan,
             "exam__text_suggests_aos": np.nan,
-            "AAS": df["AAS"].astype(int),
+            "AD": df["AD"].astype(int),
         }
     )
 
@@ -198,13 +198,13 @@ def build_cp_tables(final_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame,
     cp2e["echo__aortic_valve_disease"] = df["_echo_text"].map(lambda x: _binary_from_text(x, [r"主动脉瓣.*返流", r"主动脉瓣.*狭窄", r"主动脉瓣钙化"]))
     cp2e["echo__pericardial_effusion"] = df["_echo_text"].map(lambda x: _binary_from_text(x, [r"心包积液", r"心包少量积液", r"心包腔.*液性暗区"]))
     cp2e["echo__suspected_intimal_flap"] = df["_echo_text"].map(lambda x: _binary_from_text(x, [r"内膜片", r"双腔", r"真假腔", r"主动脉夹层", r"壁间血肿"]))
-    cp2e["echo__suggest_aas_on_echo"] = df["_echo_text"].map(lambda x: _binary_from_text(x, high_aas_echo + medium_aas_echo))
+    cp2e["echo__suggest_ad_on_echo"] = df["_echo_text"].map(lambda x: _binary_from_text(x, high_ad_echo + medium_ad_echo))
 
     return cp1, cp2, cp2e
 
 
 def build_ecg_text_features(final_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    df = final_df[["ID", "AAS", "ECG诊断结论"]].copy()
+    df = final_df[["ID", "AD", "ECG诊断结论"]].copy()
     df["ID"] = df["ID"].astype(str).str.strip()
     df["ecg_diagnosis_text"] = df["ECG诊断结论"].map(_s)
     text = df["ecg_diagnosis_text"].fillna("").astype(str).str.lower()
@@ -216,7 +216,7 @@ def build_ecg_text_features(final_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Da
     df["ecg_text_st_depression"] = kw(("st段下移", "st段压低", "st压低"))
     df["ecg_text_arrhythmia"] = kw(("房颤", "房扑", "早搏", "心律失常", "室上速", "室速", "传导阻滞"))
     df["ecg_text_acs_like_ecg"] = kw(("st段上抬", "st段抬高", "st段下移", "st段压低", "t波改变", "st-t改变", "心肌缺血"))
-    df["ecg_text_text_suggests_aas"] = [
+    df["ecg_text_text_suggests_ad"] = [
         "high" if ("st段上抬" in s or "st段抬高" in s or "房颤" in s)
         else "medium" if ("st段下移" in s or "t波改变" in s or "心律失常" in s)
         else "low" if s else "unknown"
@@ -239,13 +239,13 @@ def build_ecg_text_features(final_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Da
         df[
             [
                 "ID",
-                "AAS",
+                "AD",
                 "ecg_diagnosis_text",
                 "ecg_text_st_elevation",
                 "ecg_text_st_depression",
                 "ecg_text_arrhythmia",
                 "ecg_text_acs_like_ecg",
-                "ecg_text_text_suggests_aas",
+                "ecg_text_text_suggests_ad",
                 "kw_st_elevation",
                 "kw_st_depression",
                 "kw_twave_change",
@@ -327,7 +327,7 @@ def predict_cp3_text(ecg_feat_df: pd.DataFrame) -> pd.DataFrame:
             X2[:, start:] = num
         preds += _sigmoid(X2 @ w + b)
     preds /= max(len(weight_files), 1)
-    return pd.DataFrame({"ID": ecg_feat_df["ID"].astype(str), "prob": preds, "label": ecg_feat_df["AAS"].astype(int)})
+    return pd.DataFrame({"ID": ecg_feat_df["ID"].astype(str), "prob": preds, "label": ecg_feat_df["AD"].astype(int)})
 
 
 def predict_lgbm_stage(cp_csv: Path, stage_key: str) -> pd.DataFrame:
@@ -335,8 +335,8 @@ def predict_lgbm_stage(cp_csv: Path, stage_key: str) -> pd.DataFrame:
 
     df = pd.read_csv(cp_csv)
     df["ID"] = df["ID"].astype(str)
-    y = df["AAS"].astype(int).values
-    X = df.drop(columns=["ID", "AAS"])
+    y = df["AD"].astype(int).values
+    X = df.drop(columns=["ID", "AD"])
     X = drop_leakage_cols(X)
     X = encode_llm_string_columns(X)
     X = add_missing_indicators(X)
@@ -671,7 +671,7 @@ def main() -> None:
     _log(f"[main] loading final dataset: {XIANGYA_FINAL_CSV}")
     final_df = pd.read_csv(XIANGYA_FINAL_CSV)
     final_df["ID"] = final_df["ID"].astype(str).str.strip()
-    final_df["AAS"] = final_df["AAS"].astype(int)
+    final_df["AD"] = final_df["AD"].astype(int)
     if args.offset and args.offset > 0:
         final_df = final_df.iloc[args.offset:].copy()
     if args.limit and args.limit > 0:
@@ -680,7 +680,7 @@ def main() -> None:
     allowed_modes = {"multi_agent", "single_agent", "canonical"}
     if not baseline_modes or any(x not in allowed_modes for x in baseline_modes):
         raise ValueError(f"Invalid --baselines: {args.baselines}")
-    _log(f"[main] loaded n={len(final_df)} pos={int(final_df['AAS'].sum())} neg={int(len(final_df) - final_df['AAS'].sum())}")
+    _log(f"[main] loaded n={len(final_df)} pos={int(final_df['AD'].sum())} neg={int(len(final_df) - final_df['AD'].sum())}")
 
     _log("[main] building CP1/CP2/CP2E input tables")
     cp1, cp2, cp2e = build_cp_tables(final_df)

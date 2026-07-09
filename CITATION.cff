@@ -4,7 +4,7 @@ message: "If you use this software or the accompanying release materials, please
 type: software
 authors:
   - name: "AD multi-agent study authors"
-repository-code: "https://github.com/gllary/AAS-multi-agent"
+repository-code: "https://github.com/gllary/AD-multi-agent"
 date-released: 2026-06-16
 license: MIT
 abstract: "Code and release materials for safety governed pathway support for suspected acute aortic dissection before computed tomography angiography."

@@ -20,7 +20,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(os.environ.get("AAS_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
+ROOT = Path(os.environ.get("AD_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
 
 COHORT_FILES: dict[str, Path] = {
     "datasetA": ROOT / "cohort_d_datasetA_raw_exploratory/FINAL_retained_predictions.csv",

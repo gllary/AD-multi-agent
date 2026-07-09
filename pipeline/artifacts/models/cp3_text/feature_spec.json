@@ -16,11 +16,11 @@
     "ecg_text_acs_like_ecg==0",
     "ecg_text_acs_like_ecg==1",
     "ecg_text_acs_like_ecg==unknown",
-    "ecg_text_text_suggests_aas==<empty>",
-    "ecg_text_text_suggests_aas==high",
-    "ecg_text_text_suggests_aas==low",
-    "ecg_text_text_suggests_aas==medium",
-    "ecg_text_text_suggests_aas==unknown",
+    "ecg_text_text_suggests_ad==<empty>",
+    "ecg_text_text_suggests_ad==high",
+    "ecg_text_text_suggests_ad==low",
+    "ecg_text_text_suggests_ad==medium",
+    "ecg_text_text_suggests_ad==unknown",
     "ecg_atrialrate",
     "ecg_paxis",
     "ecg_printerval",
@@ -72,7 +72,7 @@
       "1",
       "unknown"
     ],
-    "ecg_text_text_suggests_aas": [
+    "ecg_text_text_suggests_ad": [
       "",
       "high",
       "low",

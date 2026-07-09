@@ -2,6 +2,10 @@
 
 This folder contains de-identified retained Cohort D checkpoint input tables for the manuscript analysis denominator (n = 1,010).
 
+The `ID` column contains release-only pseudonymous identifiers (`D000001`,
+`D000002`, ...). These are not hospital, encounter, medical-record, or platform
+identifiers, and the re-identification mapping is not included in this release.
+
 Files:
 
 - `cohort_D_CP1_demo_history_exam.csv`: CP1 demographics, history, and examination fields.

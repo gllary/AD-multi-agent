@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import os
 
-ROOT = Path(os.environ.get("AAS_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
+ROOT = Path(os.environ.get("AD_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
 os.environ.setdefault("MPLCONFIGDIR", str(ROOT / ".matplotlib-cache"))
 os.environ.setdefault("XDG_CACHE_HOME", str(ROOT / ".cache"))
 
@@ -352,7 +352,7 @@ def fig_baseline(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> None:
         vals = []
         for c in COHORTS:
             df = current_features(c.key, preds)
-            s = df.loc[df["AAS"] == 1, col].dropna()
+            s = df.loc[df["AD"] == 1, col].dropna()
             vals.append(float((s == 1).mean()) if len(s) else np.nan)
         rows.append((lab, vals))
     yy = np.arange(len(rows))[::-1]
@@ -375,7 +375,7 @@ def fig_baseline(metrics: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> None:
     for ci, c in enumerate(COHORTS):
         df = current_features(c.key, preds)
         for li, (col, _lab) in enumerate(labs):
-            vals = pd.to_numeric(df.loc[df["AAS"] == 1, col], errors="coerce").dropna()
+            vals = pd.to_numeric(df.loc[df["AD"] == 1, col], errors="coerce").dropna()
             if len(vals):
                 q1, med, q3 = np.percentile(vals, [25, 50, 75])
                 x = xbase[li] + offsets[ci]
@@ -772,7 +772,7 @@ def fig_fn_safety_supplement(metrics: pd.DataFrame, preds: dict[str, pd.DataFram
     ax_c.set_title(f"Residual reassessment concentration by subgroup{scope_suffix}")
     fig.colorbar(im, ax=ax_c, fraction=0.05, pad=0.02, label="%")
 
-    axes_cols = ["history_aortic_disease", "any_classic_pain", "echo_aas_signal", "reached_stage"]
+    axes_cols = ["history_aortic_disease", "any_classic_pain", "echo_ad_signal", "reached_stage"]
     display = ["Prior aortic\ndisease", "Classic pain\nabsent", "Echo\nsignal", "Stage\nreached"]
     vals = []
     for col in axes_cols:

@@ -9,12 +9,12 @@ import pandas as pd
 def _redact_column(name: str) -> bool:
     """Omit from LLM-readable evidence: fields that mirror label / AD wording (avoid perceived leakage)."""
     c = str(name)
-    if c == "text_suggests_aas":
+    if c == "text_suggests_ad":
         return True
     cl = c.lower()
-    if cl.endswith("__text_suggests_aas") or cl.endswith("__text_suggests_ais") or cl.endswith("__text_suggests_aos"):
+    if cl.endswith("__text_suggests_ad") or cl.endswith("__text_suggests_ais") or cl.endswith("__text_suggests_aos"):
         return True
-    if "suggest_aas" in cl:
+    if "suggest_ad" in cl:
         return True
     return False
 
@@ -36,7 +36,7 @@ def curated_evidence_from_row(
 ) -> str:
     """Select non-empty fields as bullet lines; cap count for token budget."""
     lines: list[str] = []
-    skip = {"ID", "AAS", "id"}
+    skip = {"ID", "AD", "id"}
     allowed = set(include_columns) if include_columns is not None else None
     for name, val in row.items():
         if name in skip:

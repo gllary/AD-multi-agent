@@ -60,8 +60,8 @@ def _lgbm_predict_ids(
     if h.empty:
         return pd.DataFrame(columns=["ID", "prob", "label"])
 
-    y_h = h["AAS"].astype(int).values
-    X_h = h.drop(columns=["ID", "AAS"])
+    y_h = h["AD"].astype(int).values
+    X_h = h.drop(columns=["ID", "AD"])
     X_h = drop_leakage_cols(X_h)
     X_h = encode_llm_string_columns(X_h)
     X_h = add_missing_indicators(X_h)
@@ -111,12 +111,12 @@ def _cnn_predict_ids(ids: Iterable[str]) -> pd.DataFrame | None:
 
     cp1 = pd.read_csv(CP_SRC_DIR / CP_CSV["CP1"])
     cp1["ID"] = cp1["ID"].astype(str)
-    label_df = pd.DataFrame({"ID": ids_list}).merge(cp1[["ID", "AAS"]], on="ID", how="inner")
+    label_df = pd.DataFrame({"ID": ids_list}).merge(cp1[["ID", "AD"]], on="ID", how="inner")
     label_df = label_df[label_df["ID"].isin(id2idx)].reset_index(drop=True)
     if label_df.empty:
         return pd.DataFrame(columns=["ID", "prob", "label"])
 
-    y_h = label_df["AAS"].astype(int).values
+    y_h = label_df["AD"].astype(int).values
     X = signals_all[[id2idx[i] for i in label_df["ID"]], :, :].copy()
     for i in range(len(X)):
         for c in range(12):

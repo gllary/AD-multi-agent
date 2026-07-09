@@ -12,7 +12,7 @@ import json
 import os
 from pathlib import Path
 
-ROOT = Path(os.environ.get("AAS_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
+ROOT = Path(os.environ.get("AD_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
 os.environ.setdefault("MPLCONFIGDIR", str(ROOT / ".matplotlib-cache"))
 os.environ.setdefault("XDG_CACHE_HOME", str(ROOT / ".cache"))
 

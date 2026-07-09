@@ -42,10 +42,6 @@ Manuscript materials included in this bundle:
 - `supplementary_data_3_stage_models_thresholds_calibration_missingness.xlsx`
 - `supplementary_data_4_cohort_v2_negative_strata_metrics.csv`
 
-The file `release_prompt_schema_config_freeze_inventory.xlsx` is retained as
-release-only implementation documentation and is not numbered as a journal
-Supplementary Data file.
-
 Current manuscript alignment:
 
 - Cohort V2 final analysis set: n = 15,109.
@@ -133,13 +129,19 @@ repository-root/
 - `cohort_D_CP2_demo_history_exam_lab.csv`
 - `cohort_D_CP2E_demo_history_exam_lab_echo.csv`
 
-`data/derived/cohort_D/` contains retained IDs, final action-level predictions/metrics, and OOF score tables used to document the frozen development boundary.
+`data/derived/cohort_D/` contains retained release IDs, final action-level
+predictions/metrics, and OOF score tables used to document the frozen
+development boundary.
 
-The retained Cohort D CSV headers and frozen code paths deliberately preserve
-the legacy binary label column name `AAS` for compatibility with the locked
-development pipeline. This is a compatibility artifact, not a change in the
-clinical target; in the release documentation and associated manuscript, that
-column denotes the AD-positive/AD-negative reference label.
+The `ID` column in the public Cohort D CSV files contains release-only
+pseudonymous identifiers in the form `D000001`, `D000002`, and so on. These
+values are not hospital, encounter, medical-record, or platform identifiers, and
+no mapping back to institutional source identifiers is included in this
+repository.
+
+The retained Cohort D CSV headers and code paths use `AD` as the binary
+reference-label column. In the release documentation and associated manuscript,
+that column denotes the AD-positive/AD-negative reference label.
 
 ## Exclusions
 
