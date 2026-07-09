@@ -6,9 +6,9 @@ This folder is a scoped release copy for the manuscript:
 
 It keeps only materials aligned with the current manuscript narrative:
 
-- Frozen safety-governed Qwen multi-agent, single-agent, and canonical pathway-support code.
+- Frozen safety-governed multi-agent, single-agent, and canonical pathway-support code.
 - Frozen quantitative model artifacts and policy thresholds.
-- Current manuscript figure/table generation scripts.
+- Generic figure/table generation scripts that read retained prediction files.
 - PHI-stripped frozen prompt templates.
 - De-identified Cohort D retained analysis data.
 
@@ -22,7 +22,7 @@ software inspection. It is not clinical-use software, not a medical device, and
 not a prospective triage protocol.
 
 The public source tree supports the frozen Cohort D development-boundary
-materials and manuscript figure/table scripts. External validation reproduction
+materials and generic reproduction scripts. External validation reproduction
 requires controlled access to restricted institutional datasets that are not
 included in this repository.
 
@@ -90,7 +90,7 @@ Run a small Cohort D pathway smoke test:
 
 ```bash
 cd pipeline
-python scripts/run_pathway.py --cohort datasetA --limit 10
+python scripts/run_pathway.py --cohort cohort_D --limit 10
 ```
 
 Live LLM calls require credentials supplied through environment variables. See
@@ -107,8 +107,8 @@ repository-root/
 │       ├── models/              # LightGBM and CP3 text model artifacts
 │       └── policy/              # frozen policy thresholds
 ├── analysis/
-│   ├── figures/                 # current manuscript figure/audit scripts
-│   └── tables/                  # current manuscript table scripts
+│   ├── figures/                 # generic retained-result figure scripts
+│   └── tables/                  # generic retained-result table scripts
 ├── data/
 │   ├── raw_data/cohort_D/       # retained Cohort D CP1/CP2/CP2E inputs
 │   └── derived/cohort_D/        # retained IDs, final predictions, metrics, OOF scores
@@ -148,3 +148,20 @@ Raw external validation inputs, V2 model-input tables, patient-level LLM traces,
 and unrestricted hospital data are not included because they are governed by
 institutional review board and hospital data-governance restrictions. External
 validation reproduction therefore requires approved controlled-platform access.
+
+## Generic Figure Inputs
+
+The figure scripts do not encode internal working splits or intermediate
+working directories. To reproduce figures with controlled-access data, provide
+one retained prediction file per cohort using the same schema:
+
+```text
+restricted_inputs/cohort_V1/FINAL_retained_predictions.csv
+restricted_inputs/cohort_V2/FINAL_retained_predictions.csv
+```
+
+Then run:
+
+```bash
+python analysis/figures/build_figures.py
+```

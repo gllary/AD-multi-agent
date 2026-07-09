@@ -1,4 +1,4 @@
-# Runtime pip dependencies for the 720-visit Phase 1 run.
+# Runtime pip dependencies for the public release scripts.
 # Tested against Python 3.10+ (3.12 recommended).
 
 # Core scientific
@@ -12,5 +12,8 @@ lightgbm>=4.0
 # scikit-learn (used by run_pathway._metrics for AUROC / AUPRC)
 scikit-learn>=1.2
 
-# LLM client (Qwen via OpenAI-compatible gateway, see llm_client.py)
+# Figure generation scripts in analysis/figures/
+matplotlib>=3.7
+
+# LLM client via OpenAI-compatible gateway, see llm_client.py
 openai>=1.0

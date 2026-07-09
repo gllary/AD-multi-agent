@@ -1,23 +1,23 @@
 # -*- coding: utf-8 -*-
-"""datasetB_v6 预计算概率表（无 LightGBM 运行时亦可跑通路）。"""
+"""cohort_V1 预计算概率表（无 LightGBM 运行时亦可跑通路）。"""
 
 from __future__ import annotations
 
 import pandas as pd
 
-from .config import PRECOMPUTED_V6_CP3_TEXT, PRECOMPUTED_V6_DIR
+from .config import PRECOMPUTED_COHORT_V1_CP3_TEXT, PRECOMPUTED_COHORT_V1_DIR
 
 
-def load_v6_precomputed_score_table(ids: list[str] | None = None, cp3_source: str = "cnn") -> pd.DataFrame:
-    if cp3_source == "text" and PRECOMPUTED_V6_CP3_TEXT.exists():
-        base = pd.read_csv(PRECOMPUTED_V6_CP3_TEXT)
+def load_cohort_v1_precomputed_score_table(ids: list[str] | None = None, cp3_source: str = "cnn") -> pd.DataFrame:
+    if cp3_source == "text" and PRECOMPUTED_COHORT_V1_CP3_TEXT.exists():
+        base = pd.read_csv(PRECOMPUTED_COHORT_V1_CP3_TEXT)
         base["ID"] = base["ID"].astype(str)
         if ids is not None:
             want = {str(x) for x in ids}
             base = base[base["ID"].isin(want)].copy()
         return base[["ID", "label", "CP1", "CP2", "CP3", "CP4"]]
 
-    pdir = PRECOMPUTED_V6_DIR
+    pdir = PRECOMPUTED_COHORT_V1_DIR
     c1 = pd.read_csv(pdir / "holdout_CP1_probs.csv")
     c2 = pd.read_csv(pdir / "holdout_CP2_probs.csv")
     c4 = pd.read_csv(pdir / "holdout_CP2E_probs.csv")

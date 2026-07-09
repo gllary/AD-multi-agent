@@ -75,8 +75,7 @@ def encode_llm_string_columns(X: pd.DataFrame) -> pd.DataFrame:
     for c in X.columns:
         # Use pandas API so nullable dtypes (StringDtype, Int64Dtype, …) are
         # detected correctly. numpy.issubdtype rejects pandas extension dtypes
-        # on numpy >= 2 and raises TypeError, which broke the server run on
-        # 2026-05-18 (numpy 2.x + pandas 2.x server stack).
+        # on numpy >= 2 and raises TypeError.
         if not pd.api.types.is_numeric_dtype(X[c]):
             X[c] = pd.to_numeric(X[c], errors="coerce")
     return X

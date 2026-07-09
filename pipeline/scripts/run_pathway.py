@@ -5,8 +5,8 @@
 
 在 **本仓库根目录**（即包含 ``data/``、``artifacts/``、``src/`` 的 ``llm_tool_multi_agent`` 文件夹）下执行::
 
-  python scripts/run_pathway.py --cohort datasetA --limit 50
-  python scripts/run_pathway.py --cohort datasetB_v6
+  python scripts/run_pathway.py --cohort cohort_D --limit 50
+  python scripts/run_pathway.py --cohort cohort_V1
 
 环境变量 ``LLM_API_KEY`` / ``LLM_API_BASE`` / ``LLM_MODEL`` 见 README。
 """
@@ -27,8 +27,8 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from llm_tool_multi_agent.config import (
-    DATASET_A_IDS,
-    DATASET_B_V6_IDS,
+    COHORT_D_IDS,
+    COHORT_V1_IDS,
     OOF_SCORE_TABLE,
     OOF_SCORE_TABLE_CP3_TEXT,
     OUTPUT_DIR,
@@ -172,10 +172,10 @@ def _path_metrics(final_df: pd.DataFrame) -> dict[str, float | int]:
 
 
 def load_ids(cohort: str, limit: int | None) -> pd.DataFrame:
-    if cohort == "datasetA":
-        df = pd.read_csv(DATASET_A_IDS)
-    elif cohort == "datasetB_v6":
-        df = pd.read_csv(DATASET_B_V6_IDS)
+    if cohort == "cohort_D":
+        df = pd.read_csv(COHORT_D_IDS)
+    elif cohort == "cohort_V1":
+        df = pd.read_csv(COHORT_V1_IDS)
     else:
         raise ValueError(cohort)
     df["ID"] = df["ID"].astype(str)
@@ -185,29 +185,29 @@ def load_ids(cohort: str, limit: int | None) -> pd.DataFrame:
 
 
 def load_score_table(cohort: str, ids: list[str], cp3_source: str = "cnn") -> pd.DataFrame:
-    if cohort == "datasetA":
+    if cohort == "cohort_D":
         score_path = OOF_SCORE_TABLE_CP3_TEXT if cp3_source == "text" and OOF_SCORE_TABLE_CP3_TEXT.exists() else OOF_SCORE_TABLE
         st = pd.read_csv(score_path)
         st["ID"] = st["ID"].astype(str)
         st = st[st["ID"].isin(set(ids))].copy()
         return st
-    if cohort == "datasetB_v6":
+    if cohort == "cohort_V1":
         try:
             if cp3_source == "text":
-                from llm_tool_multi_agent.precomputed_v6 import load_v6_precomputed_score_table
+                from llm_tool_multi_agent.precomputed_cohort_v1 import load_cohort_v1_precomputed_score_table
 
-                return load_v6_precomputed_score_table(ids, cp3_source="text")
+                return load_cohort_v1_precomputed_score_table(ids, cp3_source="text")
             return build_score_table_for_ids(ids)
         except (ImportError, FileNotFoundError, OSError):
-            from llm_tool_multi_agent.precomputed_v6 import load_v6_precomputed_score_table
+            from llm_tool_multi_agent.precomputed_cohort_v1 import load_cohort_v1_precomputed_score_table
 
-            return load_v6_precomputed_score_table(ids, cp3_source=cp3_source)
+            return load_cohort_v1_precomputed_score_table(ids, cp3_source=cp3_source)
     raise ValueError(cohort)
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--cohort", choices=["datasetA", "datasetB_v6"], required=True)
+    ap.add_argument("--cohort", choices=["cohort_D", "cohort_V1"], required=True)
     ap.add_argument("--limit", type=int, default=0, help="max patients (0=all)")
     ap.add_argument("--out", type=str, default="", help="output directory override")
     ap.add_argument("--cp3-source", choices=["cnn", "text"], default="text", help="source of CP3 risk score")
@@ -290,7 +290,7 @@ def main():
     path_sum = final_df["visited_stages"].value_counts().rename_axis("path").reset_index(name="count")
     path_sum.to_csv(out_root / "pathway_path_summary.csv", index=False)
 
-    if args.cohort == "datasetA":
+    if args.cohort == "cohort_D":
         score_src = "oof_score_table_cp3_text" if args.cp3_source == "text" else "oof_score_table"
     else:
         score_src = "holdout_precomputed_cp3_text" if args.cp3_source == "text" else "fold_ensemble_zero_shot"

@@ -200,22 +200,15 @@ def validate_coordinator_proposal(
             canonical_next_stage=canonical_next_stage,
         )
 
-    # ─── Intermediate-risk rescue (added 2026-05-20) ─────────────────────
-    # FN audit on Qwen-ETL 720 cohort (feature_comparison/outputs/multi_agent_fn_audit.md)
-    # found that 14/15 multi-only FN cases shared this pattern:
-    #   - risk_score in [0.11, 0.49] (intermediate)
-    #   - canonical threshold route → `call_lab_agent` (CP1) or
-    #     `call_ecg_agent` / `call_echo_agent` (CP2): continue gathering evidence
-    #   - both specialists proposed `observe_or_reassess` (Qwen ETL gives
-    #     them more detailed evidence lists, which paradoxically makes them
-    #     feel "we've seen enough — observe")
-    #   - coordinator followed specialist consensus → premature termination
+    # Intermediate-risk rescue: when the threshold route still asks for more
+    # evidence, specialist consensus alone cannot prematurely terminate the
+    # pathway without a high-confidence reassessment state.
     # Without this rescue the safety layer accepted observe as "within bounds"
     # for intermediate risk. We now force a fallback to the canonical
     # continuation action whenever the coordinator wants to terminate early
     # on a non-terminal stage with intermediate risk. The canonical action
     # keeps the patient inside the pathway, preserves recall, and respects
-    # the threshold policy learned on datasetA.
+    # the threshold policy fixed on the development cohort.
     if (
         current_stage in {"CP1", "CP2"}
         and rl == "intermediate"

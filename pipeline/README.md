@@ -26,20 +26,25 @@ where supported by the pathway code. For live calls:
 ```bash
 export LLM_API_KEY="..."
 export LLM_API_BASE="http://127.0.0.1:8003/v1/"
-export LLM_MODEL="Qwen3-235B-A22B-Instruct"
+export LLM_MODEL="provider-model-name"
 ```
 
-The phase-1 Qwen runner also understands `QWEN_API_KEY`, `QWEN_BASE_URL`, and
-`QWEN_MODEL_NAME`.
+The precomputed input runner accepts the same live-LLM environment variables.
 
 ## Example
 
 ```bash
 cd pipeline
-python scripts/run_pathway.py --cohort datasetA --limit 10
+python scripts/run_pathway.py --cohort cohort_D --limit 10
 ```
 
 Outputs are written under `pipeline/outputs/` by default and are ignored by git.
+
+For controlled-access external data already transformed into CP input tables:
+
+```bash
+python scripts/run_precomputed_bundle.py --limit 10
+```
 
 ## Data Boundary
 

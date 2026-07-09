@@ -21,8 +21,8 @@ issue containing credentials, patient-level identifiers, or restricted data.
 ## Credential Handling
 
 The code expects API keys to be supplied through environment variables such as
-`LLM_API_KEY` or `QWEN_API_KEY`. Real keys must not be committed. The
-`.env.example` file is intentionally blank.
+`LLM_API_KEY`. Real keys must not be committed. The `.env.example` file is
+intentionally blank.
 
 ## Data Handling
 

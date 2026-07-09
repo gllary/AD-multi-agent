@@ -12,6 +12,6 @@ lgbm/
 This repository includes the frozen five-fold LightGBM model artifacts aligned
 with the Cohort D development boundary used in the manuscript.
 
-If models are retrained for a separate exploratory analysis, replace the
+If models are retrained for a separate release configuration, replace the
 corresponding `fold*_booster.txt` files and document that the result is no
 longer the frozen manuscript configuration.

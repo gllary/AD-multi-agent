@@ -43,10 +43,9 @@ COLORS = {
     # Cohort colors — Tol "light" qualitative subset (lower saturation than
     # Tol muted; specifically designed for soft, pastel-leaning Nature-style
     # figures). Distinct from the Okabe-Ito method triad to avoid hue collision.
-    "datasetA":      "#77AADD",  # light blue   — development (training anchor)
-    "datasetB_v6":   "#44BB99",  # mint green   — V1, small external
-    "xiangya_720":   "#EEDD88",  # light yellow — V2, medium external
-    "xiangya_16218": "#EE8866",  # coral        — V3, large external (warmest = headline)
+    "cohort_D":      "#77AADD",  # light blue   — development (training anchor)
+    "cohort_V1":   "#44BB99",  # mint green   — V1, small external
+    "cohort_V2": "#EE8866",  # coral — headline external validation cohort
     # Neutral
     "ink":        "#333333",     # dark grey (not pure black — softer on print)
     "muted":      "#999999",     # mid grey for reference lines
@@ -69,37 +68,33 @@ SHAP_CMAP = LinearSegmentedColormap.from_list(
 
 
 # --- Canonical orderings for all figures/tables ---
-COHORT_ORDER = ["datasetA", "datasetB_v6", "xiangya_720", "xiangya_16218"]
+COHORT_ORDER = ["cohort_D", "cohort_V1", "cohort_V2"]
 
 COHORT_LABELS = {
-    "datasetA":      "Cohort D\n(Development, n=1,010)",
-    "datasetB_v6":   "Cohort V1\n(External, n=173)",
-    "xiangya_720":   "Cohort V2\n(External, n=630)",
-    "xiangya_16218": "Cohort V3\n(External, n=14,748)",
+    "cohort_D":      "Cohort D\n(Development, n=1,010)",
+    "cohort_V1":   "Cohort V1\n(External, n=173)",
+    "cohort_V2": "Cohort V2\n(External, n=15,109)",
 }
 
 # Short display name (used on most figure axes / legends).
 COHORT_LABELS_SHORT = {
-    "datasetA":      "D",
-    "datasetB_v6":   "V1",
-    "xiangya_720":   "V2",
-    "xiangya_16218": "V3",
+    "cohort_D":      "D",
+    "cohort_V1":   "V1",
+    "cohort_V2": "V2",
 }
 
 # Display name with n inline; used in tables and longer captions.
 COHORT_LABELS_WITH_N = {
-    "datasetA":      "Cohort D (n=1,010)",
-    "datasetB_v6":   "Cohort V1 (n=173)",
-    "xiangya_720":   "Cohort V2 (n=630)",
-    "xiangya_16218": "Cohort V3 (n=14,748)",
+    "cohort_D":      "Cohort D (n=1,010)",
+    "cohort_V1":   "Cohort V1 (n=173)",
+    "cohort_V2": "Cohort V2 (n=15,109)",
 }
 
 # Full names for cohort-overview table and figure captions.
 COHORT_FULL_NAMES = {
-    "datasetA":      "Cohort D — Development cohort",
-    "datasetB_v6":   "Cohort V1 — External validation 1",
-    "xiangya_720":   "Cohort V2 — External validation 2",
-    "xiangya_16218": "Cohort V3 — External validation 3",
+    "cohort_D":      "Cohort D — Development cohort",
+    "cohort_V1":   "Cohort V1 — External validation 1",
+    "cohort_V2": "Cohort V2 — External validation 2",
 }
 
 METHOD_ORDER = ["canonical", "single_agent", "multi_agent"]

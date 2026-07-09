@@ -4,7 +4,7 @@ Thank you for your interest in this research code release.
 
 This repository is a manuscript-aligned release bundle rather than a general
 clinical product. Contributions should preserve the frozen analysis boundary
-unless a change is explicitly marked as a new exploratory extension.
+unless a change is explicitly marked as a separate extension.
 
 ## Scope
 

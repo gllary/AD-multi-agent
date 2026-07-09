@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Run Xiangya Big Data Platform external validation with ECG text-only CP3."""
+"""Run restricted external validation with ECG text-only CP3."""
 
 from __future__ import annotations
 
@@ -35,24 +35,21 @@ from run_pathway import _metrics, _path_metrics
 
 
 MAIN_PROJECT_ROOT = PROJECT_ROOT.parent
-XIANGYA_FINAL_CSV = MAIN_PROJECT_ROOT / "data" / "interim" / "xiangya_external_refined" / "xiangya_main_cohort_model_input_labeled.csv"
-OUT_ROOT = OUTPUT_DIR / "xiangya_external_validation"
+RESTRICTED_INPUT_ROOT = Path(os.environ.get("AD_RESTRICTED_INPUT_ROOT", MAIN_PROJECT_ROOT / "restricted_inputs"))
+EXTERNAL_VALIDATION_CSV = Path(
+    os.environ.get(
+        "AD_EXTERNAL_VALIDATION_INPUT",
+        RESTRICTED_INPUT_ROOT / "cohort_V2" / "cohort_v2_model_input_labeled.csv",
+    )
+)
+OUT_ROOT = OUTPUT_DIR / "external_validation"
 CP_DIR = OUT_ROOT / "cp_inputs"
 FEATURE_DIR = OUT_ROOT / "features"
 SCORE_DIR = OUT_ROOT / "scores"
-REPORT_PATH = OUT_ROOT / "xiangya_external_validation_report_zh.md"
+REPORT_PATH = OUT_ROOT / "external_validation_report.md"
 
 CP3_TEXT_MODEL_DIR = PROJECT_ROOT / "artifacts" / "models" / "cp3_text"
 LGBM_MODEL_DIR = PROJECT_ROOT / "artifacts" / "models" / "lgbm"
-
-
-def configure_live_env_from_qwen() -> None:
-    if not os.environ.get("LLM_API_KEY") and os.environ.get("QWEN_API_KEY"):
-        os.environ["LLM_API_KEY"] = os.environ["QWEN_API_KEY"]
-    if not os.environ.get("LLM_API_BASE") and os.environ.get("QWEN_BASE_URL"):
-        os.environ["LLM_API_BASE"] = os.environ["QWEN_BASE_URL"]
-    if not os.environ.get("LLM_MODEL") and os.environ.get("QWEN_MODEL_NAME"):
-        os.environ["LLM_MODEL"] = os.environ["QWEN_MODEL_NAME"]
 
 
 def _s(value: object) -> str:
@@ -611,9 +608,9 @@ def write_report(
 ) -> None:
     metric_cols = ["AUROC", "AUPRC", "Sensitivity", "Specificity", "PPV", "NPV", "Accuracy", "F1", "MCC"]
     lines = [
-        "# 湘雅大数据平台外部验证结果",
+        "# External validation results",
         "",
-        f"- 输入文件：`{XIANGYA_FINAL_CSV}`",
+        f"- Input file: `{EXTERNAL_VALIDATION_CSV}`",
         f"- 样本量：`{n}`",
         f"- AD 阳性：`{n_pos}`",
         f"- AD 阴性：`{n - n_pos}`",
@@ -632,7 +629,7 @@ def write_report(
         "",
         "## 说明",
         "",
-        "- CP1 / CP2 / CP4 使用 datasetA 训练好的 LightGBM fold ensemble 在湘雅大数据平台外部队列上零样本推理。",
+        "- CP1 / CP2 / CP4 use the Cohort D-trained LightGBM fold ensemble for zero-shot inference in the restricted external cohort.",
         "- CP3 使用已训练的 ECG 文本模型（text-only route）进行外推，不使用 ECG 原始波形。",
         "- 动态 multi-agent、single-agent 和 canonical baseline 共享同一套 policy thresholds。",
     ]
@@ -654,22 +651,20 @@ def main() -> None:
     )
     args = ap.parse_args()
 
-    configure_live_env_from_qwen()
     if args.run_name:
         OUT_ROOT = OUTPUT_DIR / args.run_name
         CP_DIR = OUT_ROOT / "cp_inputs"
         FEATURE_DIR = OUT_ROOT / "features"
         SCORE_DIR = OUT_ROOT / "scores"
-        REPORT_PATH = OUT_ROOT / "xiangya_external_validation_report_zh.md"
-    _log("[main] configured LLM environment from QWEN_* variables")
+        REPORT_PATH = OUT_ROOT / "external_validation_report.md"
     OUT_ROOT.mkdir(parents=True, exist_ok=True)
     CP_DIR.mkdir(parents=True, exist_ok=True)
     FEATURE_DIR.mkdir(parents=True, exist_ok=True)
     SCORE_DIR.mkdir(parents=True, exist_ok=True)
     _log(f"[main] output root: {OUT_ROOT}")
 
-    _log(f"[main] loading final dataset: {XIANGYA_FINAL_CSV}")
-    final_df = pd.read_csv(XIANGYA_FINAL_CSV)
+    _log(f"[main] loading final dataset: {EXTERNAL_VALIDATION_CSV}")
+    final_df = pd.read_csv(EXTERNAL_VALIDATION_CSV)
     final_df["ID"] = final_df["ID"].astype(str).str.strip()
     final_df["AD"] = final_df["AD"].astype(int)
     if args.offset and args.offset > 0:
@@ -730,7 +725,7 @@ def main() -> None:
         score_tbl = score_tbl.merge(cp3_text.rename(columns={"prob": "CP3"})[["ID", "CP3"]], on="ID", how="left")
         score_tbl = score_tbl.merge(d4[["ID", "CP4"]], on="ID", how="left")
         score_tbl = score_tbl.fillna({"CP1": 0.5, "CP2": 0.5, "CP3": 0.5, "CP4": 0.5})
-        score_tbl.to_csv(SCORE_DIR / "xiangya_score_table_cp3_text.csv", index=False)
+        score_tbl.to_csv(SCORE_DIR / "cohort_v2_score_table_cp3_text.csv", index=False)
         d1.to_csv(SCORE_DIR / "holdout_CP1_probs.csv", index=False)
         d2.to_csv(SCORE_DIR / "holdout_CP2_probs.csv", index=False)
         d4.to_csv(SCORE_DIR / "holdout_CP2E_probs.csv", index=False)

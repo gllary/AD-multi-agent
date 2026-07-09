@@ -1,14 +1,13 @@
-"""Unified current-result data loader for paper tables and checks.
+"""Unified retained-result data loader for release figures and tables.
 
 This module intentionally reads only the current retained cohort prediction files:
 
-- cohort_d_datasetA_raw_exploratory/FINAL_retained_predictions.csv
-- cohort_v1_b_v6_raw_exploratory/FINAL_retained_predictions.csv
-- cohort_v2_raw_exploratory/FINAL_retained_predictions.csv
-- cohort_v3_raw_exploratory/FINAL_retained_predictions.csv
+- data/derived/cohort_D/FINAL_retained_predictions.csv
+- restricted_inputs/cohort_V1/FINAL_retained_predictions.csv
+- restricted_inputs/cohort_V2/FINAL_retained_predictions.csv
 
-It does not replay any historical post-processing rule. The current manuscript
-uses the final binary columns already present in these files.
+No project-specific merging or intermediate run folders are used. Each cohort is
+represented by one retained prediction file with the final binary columns.
 """
 
 from __future__ import annotations
@@ -20,13 +19,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(os.environ.get("AD_PROJECT_ROOT", Path(__file__).resolve().parents[3]))
+ROOT = Path(os.environ.get("AD_PROJECT_ROOT", Path(__file__).resolve().parents[2]))
+RESTRICTED_INPUT_ROOT = Path(os.environ.get("AD_RESTRICTED_INPUT_ROOT", ROOT / "restricted_inputs"))
 
 COHORT_FILES: dict[str, Path] = {
-    "datasetA": ROOT / "cohort_d_datasetA_raw_exploratory/FINAL_retained_predictions.csv",
-    "datasetB_v6": ROOT / "cohort_v1_b_v6_raw_exploratory/FINAL_retained_predictions.csv",
-    "xiangya_720": ROOT / "cohort_v2_raw_exploratory/FINAL_retained_predictions.csv",
-    "xiangya_16218": ROOT / "cohort_v3_raw_exploratory/FINAL_retained_predictions.csv",
+    "cohort_D": ROOT / "data/derived/cohort_D/FINAL_retained_predictions.csv",
+    "cohort_V1": RESTRICTED_INPUT_ROOT / "cohort_V1" / "FINAL_retained_predictions.csv",
+    "cohort_V2": RESTRICTED_INPUT_ROOT / "cohort_V2" / "FINAL_retained_predictions.csv",
 }
 
 METHOD_TO_COLUMN = {
@@ -36,42 +35,37 @@ METHOD_TO_COLUMN = {
 }
 
 COHORT_META: dict[str, dict] = {
-    "datasetA": {
+    "cohort_D": {
         "role": "development",
-        "site": "The Second Xiangya Hospital",
-        "site_label": "Site 1",
+        "site": "Development site",
+        "site_label": "Site D",
         "label_sop": "Physician primary annotation",
         "n": 1010,
         "prevalence": 528 / 1010,
     },
-    "datasetB_v6": {
+    "cohort_V1": {
         "role": "zero-shot external",
-        "site": "Changsha Central Hospital",
-        "site_label": "Site 2",
+        "site": "External site 1",
+        "site_label": "Site V1",
         "label_sop": "Physician adjudication",
         "n": 173,
         "prevalence": 78 / 173,
     },
-    "xiangya_720": {
+    "cohort_V2": {
         "role": "zero-shot external",
-        "site": "Xiangya Big Data Platform",
-        "site_label": "Site 3",
-        "label_sop": "Physician adjudication",
-        "n": 630,
-        "prevalence": 212 / 630,
-    },
-    "xiangya_16218": {
-        "role": "zero-shot external",
-        "site": "Xiangya Big Data Platform",
-        "site_label": "Site 3",
-        "label_sop": ("LLM-assisted candidate extraction with dual independent "
-                      "physician adjudication and third-physician arbitration"),
-        "n": 14748,
-        "prevalence": 4124 / 14748,
+        "site": "External site 2",
+        "site_label": "Site V2",
+        "label_sop": (
+            "CTA/MRA or intra-operative confirmation for AD-positive labels; "
+            "physician record review plus longitudinal telephone follow-up for "
+            "AD-negative labels"
+        ),
+        "n": 15109,
+        "prevalence": 4067 / 15109,
     },
 }
 
-COHORT_ORDER = ["datasetA", "datasetB_v6", "xiangya_720", "xiangya_16218"]
+COHORT_ORDER = ["cohort_D", "cohort_V1", "cohort_V2"]
 METHOD_ORDER = ["canonical", "single_agent", "multi_agent"]
 ESCALATE_ACTIONS = {"direct_cta", "urgent_transfer"}
 
