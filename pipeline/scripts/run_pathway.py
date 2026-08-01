@@ -11,15 +11,17 @@ import pandas as pd
 from llm_tool_multi_agent.fixed_threshold_engine import (
     run_fixed_threshold_for_patient,
 )
-from llm_tool_multi_agent.quantitative_tools import load_policy
-
-
-REQUIRED_COLUMNS = {"ID", "label", "CP1", "CP2", "CP3", "CP4"}
+from llm_tool_multi_agent.quantitative_tools import (
+    PATHWAY_STAGES,
+    load_policy,
+    validate_binary_series,
+    validate_score_table,
+)
 
 
 def _metrics(labels: pd.Series, predictions: pd.Series) -> dict[str, float | int]:
-    labels = labels.astype(int)
-    predictions = predictions.astype(int)
+    labels = validate_binary_series(labels, "Metric labels")
+    predictions = validate_binary_series(predictions, "Metric predictions")
     tp = int(((labels == 1) & (predictions == 1)).sum())
     tn = int(((labels == 0) & (predictions == 0)).sum())
     fp = int(((labels == 0) & (predictions == 1)).sum())
@@ -56,12 +58,7 @@ def main() -> None:
     parser.add_argument("--limit", type=int)
     arguments = parser.parse_args()
 
-    scores = pd.read_csv(arguments.score_table)
-    missing = REQUIRED_COLUMNS - set(scores.columns)
-    if missing:
-        raise ValueError(f"Score table missing columns: {sorted(missing)}")
-    if scores["ID"].astype(str).duplicated().any():
-        raise ValueError("Score table contains duplicate patient IDs")
+    scores = validate_score_table(pd.read_csv(arguments.score_table))
     if arguments.limit:
         scores = scores.head(arguments.limit)
 
@@ -71,7 +68,7 @@ def main() -> None:
     for row in scores.itertuples(index=False):
         patient_scores = {
             stage: float(getattr(row, stage))
-            for stage in ("CP1", "CP2", "CP3", "CP4")
+            for stage in PATHWAY_STAGES
         }
         if arguments.method == "fixed-threshold":
             result = run_fixed_threshold_for_patient(
