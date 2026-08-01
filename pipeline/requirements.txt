@@ -1,0 +1,6 @@
+# Runtime pip dependencies for the public release scripts.
+# Tested against Python 3.10+ (3.12 recommended).
+
+# Core scientific
+pandas>=1.5
+jsonschema>=4.18

@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+title: "Safety-governed multi-agent clinical decision support for pre-CTA pathway allocation in suspected aortic dissection"
+message: "If you use this software or the accompanying release materials, please cite the associated manuscript and this code release."
+type: software
+authors:
+  - family-names: Guan
+    given-names: Yuxia
+  - family-names: Guo
+    given-names: Tuo
+  - family-names: An
+    given-names: Ying
+  - family-names: Ren
+    given-names: Linan
+  - family-names: Su
+    given-names: Yingjie
+  - family-names: Chai
+    given-names: Xiangping
+  - family-names: Wang
+    given-names: Jianxin
+repository-code: "https://github.com/gllary/AD-multi-agent"
+date-released: 2026-06-16
+license: MIT
+abstract: "Code and release materials for safety-governed multi-agent clinical decision support for pre-CTA pathway allocation in suspected aortic dissection."
+preferred-citation:
+  type: article
+  title: "Safety-governed multi-agent clinical decision support for pre-CTA pathway allocation in suspected aortic dissection"
+  authors:
+    - family-names: Guan
+      given-names: Yuxia
+    - family-names: Guo
+      given-names: Tuo
+    - family-names: An
+      given-names: Ying
+    - family-names: Ren
+      given-names: Linan
+    - family-names: Su
+      given-names: Yingjie
+    - family-names: Chai
+      given-names: Xiangping
+    - family-names: Wang
+      given-names: Jianxin
+  year: 2026

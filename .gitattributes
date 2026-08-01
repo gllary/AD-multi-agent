@@ -1,0 +1,8 @@
+* text=auto
+
+*.xlsx binary
+*.npz binary
+*.pkl binary
+*.joblib binary
+*.pt binary
+*.pth binary

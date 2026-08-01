@@ -1,0 +1,15 @@
+{
+  "model": "Qwen3-235B-A22B",
+  "serving_software": "vLLM",
+  "deployment": "private institutional server",
+  "accelerators": {
+    "count": 4,
+    "model": "NVIDIA H20",
+    "memory_gb_each": 141
+  },
+  "temperature": 0.2,
+  "maximum_context_length_tokens": 8192,
+  "request_timeout_seconds": 120,
+  "maximum_attempts_per_call": 3,
+  "external_patient_data_transmission": false
+}
