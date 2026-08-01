@@ -9,8 +9,8 @@ identifiers, and patient narratives are outside this public file.
 ## Information Boundary
 
 The extractor interface is limited to the prespecified narrative sources listed
-below. Diagnostic-summary outputs, including `text_suggests_aas` and
-`suggest_aas_on_echo`, are documentation-only schema fields and are outside
+below. Diagnostic-summary outputs, including `text_suggests_ad` and
+`suggest_ad_on_echo`, are documentation-only schema fields and are outside
 specialist, single-agent, and coordinator evidence packets.
 
 | Module | Prespecified narrative source |
@@ -30,7 +30,7 @@ specialist, single-agent, and coordinator evidence packets.
 
 ```text
 你是一名心血管急诊医学专家。
-请根据以下【主诉/现病史/其他相关病史】文本，仅抽取与"急性主动脉综合征（AAS）"相关的症状及病史证据。
+请根据以下【主诉/现病史/其他相关病史】文本，仅抽取与"急性主动脉夹层（AD）"相关的症状及病史证据。
 
 【重要规则】
 1. 仅根据文本中明确出现的信息进行判断，不允许主观推断
@@ -50,7 +50,7 @@ specialist, single-agent, and coordinator evidence packets.
   "trauma_related": "0|1|unknown",
   "marfan_or_ctd": "0|1|unknown",
   "aortic_disease_history": "0|1|unknown",
-  "text_suggests_aas": "low|medium|high|unknown"
+  "text_suggests_ad": "low|medium|high|unknown"
 }
 ```
 
@@ -58,7 +58,7 @@ specialist, single-agent, and coordinator evidence packets.
 
 ```text
 你是一名心血管急诊医学专家。
-请根据以下【体格检查】文本，仅抽取与"急性主动脉综合征（AAS）"相关的体征证据。
+请根据以下【体格检查】文本，仅抽取与"急性主动脉夹层（AD）"相关的体征证据。
 
 【重要规则】
 1. 仅根据文本中明确出现的信息进行判断，不允许主观推断
@@ -76,7 +76,7 @@ specialist, single-agent, and coordinator evidence packets.
   "new_aortic_regurgitation_murmur": "0|1|unknown",
   "neurologic_deficit": "0|1|unknown",
   "hypotension_or_shock": "0|1|unknown",
-  "text_suggests_aas": "low|medium|high|unknown"
+  "text_suggests_ad": "low|medium|high|unknown"
 }
 ```
 
@@ -84,7 +84,7 @@ specialist, single-agent, and coordinator evidence packets.
 
 ```text
 你是一名心血管急诊医学专家。
-请根据以下【心电图】文本，仅抽取与“AAS鉴别/相关”的心电证据（不下诊断）。
+请根据以下【心电图】文本，仅抽取与“急性主动脉夹层（AD）鉴别/相关”的心电证据（不下诊断）。
 
 【重要规则】
 1. 仅根据文本中明确出现的信息进行判断，不允许主观推断
@@ -101,7 +101,7 @@ specialist, single-agent, and coordinator evidence packets.
   "st_depression": "0|1|unknown",
   "arrhythmia": "0|1|unknown",
   "acs_like_ecg": "0|1|unknown",
-  "text_suggests_aas": "low|medium|high|unknown"
+  "text_suggests_ad": "low|medium|high|unknown"
 }
 ```
 
@@ -109,7 +109,7 @@ specialist, single-agent, and coordinator evidence packets.
 
 ```text
 你是一名心血管急诊医学专家。
-请根据以下【床旁超声/心脏彩超】文本，仅抽取与“AAS相关”的超声证据（不下诊断）。
+请根据以下【床旁超声/心脏彩超】文本，仅抽取与“急性主动脉夹层（AD）相关”的超声证据（不下诊断）。
 
 【重要规则】
 1. 仅根据文本中明确出现的信息进行判断，不允许主观推断
@@ -126,15 +126,15 @@ specialist, single-agent, and coordinator evidence packets.
   "aortic_valve_disease": "0|1|unknown",
   "pericardial_effusion": "0|1|unknown",
   "suspected_intimal_flap": "0|1|unknown",
-  "suggest_aas_on_echo": "0|1|unknown",
-  "text_suggests_aas": "low|medium|high|unknown"
+  "suggest_ad_on_echo": "0|1|unknown",
+  "text_suggests_ad": "low|medium|high|unknown"
 }
 ```
 
 ## Downstream Agent Boundary
 
 Role-restricted evidence views use explicit allowlists rather than raw-table
-dumps. The extraction fields `text_suggests_aas`, `suggest_aas_on_echo`, their
+dumps. The extraction fields `text_suggests_ad`, `suggest_ad_on_echo`, their
 module-prefixed forms, and legacy or normalized diagnostic-summary aliases are
 not part of the allowed field sets. The evidence renderer applies the same
 public evidence boundary.

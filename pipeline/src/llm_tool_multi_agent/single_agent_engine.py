@@ -7,6 +7,7 @@ import json
 from dataclasses import dataclass, field
 from typing import Any
 
+from .deliberation import summarize_coordinator_history
 from .evidence_views import build_single_agent_view
 from .llm_client import LLMClient, LLMOutputError
 from .prompts import SINGLE_AGENT_SYSTEM
@@ -54,6 +55,7 @@ def run_single_agent_for_patient(
         rl_tool = risk_level(score, c_thr, a_thr)
         allowed_actions = allowed_actions_for_stage(current)
         evidence = build_single_agent_view(patient_id, current)
+        prior_controller_summary = summarize_coordinator_history(controllers)
 
         user_payload = json.dumps(
             {
@@ -67,7 +69,7 @@ def run_single_agent_for_patient(
                 },
                 "allowed_actions": allowed_actions,
                 "stage_bounded_evidence_view": evidence,
-                "controller_history": controllers,
+                "prior_controller_summary": prior_controller_summary,
             },
             ensure_ascii=False,
             indent=2,

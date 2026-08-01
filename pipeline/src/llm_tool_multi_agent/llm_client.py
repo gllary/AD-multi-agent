@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import time
 import urllib.error
 import urllib.request
+from collections.abc import Callable
 from typing import Any
 
 from jsonschema import Draft202012Validator, ValidationError
@@ -35,7 +37,7 @@ def _extract_json_object(text: str) -> dict[str, Any]:
             return parsed
     except json.JSONDecodeError:
         pass
-    raise LLMOutputError("Response did not contain one valid JSON object")
+    raise LLMOutputError("Response must contain exactly one valid JSON object")
 
 
 def _validate_json_schema(
@@ -56,12 +58,45 @@ def _validate_specialist(
     role: str,
     stage: str,
     allowed_actions: list[str],
+    expected_risk_score: float,
+    expected_risk_level: str,
+    allowed_evidence_references: list[str],
+    allowed_missing_fields: list[str],
 ) -> dict[str, Any]:
     _validate_json_schema(payload, specialist_json_schema(), "Specialist")
     if payload["agent_role"] != role or payload["stage"] != stage:
         raise LLMOutputError("Specialist role or stage does not match the request")
     if payload["recommended_next_action"] not in allowed_actions:
         raise LLMOutputError("Specialist proposed an action outside the stage-legal set")
+
+    expected_rounded_score = float(f"{expected_risk_score:.6f}")
+    if not math.isclose(
+        float(payload["risk_score_tool"]),
+        expected_rounded_score,
+        rel_tol=0.0,
+        abs_tol=1e-6,
+    ):
+        raise LLMOutputError("Specialist risk score does not match the tool-provided score")
+    if payload["risk_level_tool"] != expected_risk_level:
+        raise LLMOutputError("Specialist risk level does not match the tool-provided level")
+
+    evidence_contract = set(allowed_evidence_references)
+    for key in ("supporting_evidence", "counter_evidence"):
+        invalid = [item for item in payload[key] if item not in evidence_contract]
+        if invalid:
+            raise LLMOutputError(
+                f"Specialist {key} contains evidence outside the role-bounded packet: {invalid}"
+            )
+
+    missing_contract = set(allowed_missing_fields)
+    invalid_missing = [
+        item for item in payload["missing_critical_data"] if item not in missing_contract
+    ]
+    if invalid_missing:
+        raise LLMOutputError(
+            "Specialist missing_critical_data contains fields not marked unknown in "
+            f"the role-bounded packet: {invalid_missing}"
+        )
     return payload
 
 
@@ -132,11 +167,17 @@ class LLMClient:
         except (KeyError, IndexError, TypeError) as exc:
             raise LLMOutputError("Unexpected chat-completion response") from exc
 
-    def _request_json(self, system: str, user: str) -> dict[str, Any]:
+    def _request_json(
+        self,
+        system: str,
+        user: str,
+        validator: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
+    ) -> dict[str, Any]:
         last_error: Exception | None = None
         for attempt in range(self.max_attempts):
             try:
-                return _extract_json_object(self._chat(system, user))
+                parsed = _extract_json_object(self._chat(system, user))
+                return validator(parsed) if validator is not None else parsed
             except (
                 LLMOutputError,
                 urllib.error.HTTPError,
@@ -158,13 +199,26 @@ class LLMClient:
         stage: str,
         user_payload: str,
         allowed_actions: list[str],
+        expected_risk_score: float,
+        expected_risk_level: str,
+        allowed_evidence_references: list[str],
+        allowed_missing_fields: list[str],
     ) -> dict[str, Any]:
         schema = json.dumps(specialist_json_schema(), ensure_ascii=False)
-        parsed = self._request_json(
+        return self._request_json(
             system_prompt,
             f"{user_payload}\n\nJSON schema: {schema}\n",
+            validator=lambda payload: _validate_specialist(
+                payload,
+                role_key,
+                stage,
+                allowed_actions,
+                expected_risk_score,
+                expected_risk_level,
+                allowed_evidence_references,
+                allowed_missing_fields,
+            ),
         )
-        return _validate_specialist(parsed, role_key, stage, allowed_actions)
 
     def coordinator_json(
         self,
@@ -174,14 +228,18 @@ class LLMClient:
         allowed_actions: list[str],
     ) -> dict[str, Any]:
         schema = json.dumps(coordinator_json_schema(), ensure_ascii=False)
-        parsed = self._request_json(
+        return self._request_json(
             system_prompt,
             (
                 f"{user_payload}\n\nAllowed proposed_action values: "
                 f"{allowed_actions}\n\nJSON schema: {schema}\n"
             ),
+            validator=lambda payload: _validate_controller(
+                payload,
+                stage,
+                allowed_actions,
+            ),
         )
-        return _validate_controller(parsed, stage, allowed_actions)
 
     def single_agent_json(
         self,

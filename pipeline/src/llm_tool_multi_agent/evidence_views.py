@@ -6,8 +6,9 @@ from __future__ import annotations
 from .curated_evidence import curated_evidence_from_row
 from .quantitative_tools import load_cp_row
 
-# Diagnostic-summary extractor outputs are intentionally absent from every
-# downstream specialist and single-agent whitelist below.
+# These allowlists mirror the released feature dictionary. Unsupported general
+# vital-sign, timestamp, and malperfusion fields are not inferred, and
+# diagnostic-summary extractor outputs are intentionally absent.
 HISTORY_COLUMNS = (
     "Age",
     "Sex",
@@ -144,7 +145,7 @@ def build_cp4_full_view(patient_id: str, max_items: int = 64) -> str:
     )
 
 
-def build_ecg_view(patient_id: str, max_items: int = 24) -> str:
+def build_ecg_view(patient_id: str, max_items: int = 64) -> str:
     row = load_cp_row(patient_id, "CP3")
     return curated_evidence_from_row(
         row,

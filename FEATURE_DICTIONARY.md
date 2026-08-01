@@ -99,17 +99,16 @@ outside specialist, single-agent, and coordinator evidence packets.
 
 | Extraction module | Narrative source | Diagnostic-summary output |
 |---|---|---|
-| History | Chief complaint, present illness, and other relevant history | `text_suggests_aas` |
-| Examination | Physical-examination text | `text_suggests_aas` |
-| ECG | First eligible ECG diagnostic text | `text_suggests_aas` |
-| Echocardiography | First eligible echocardiography conclusion and findings | `suggest_aas_on_echo`, `text_suggests_aas` |
+| History | Chief complaint, present illness, and other relevant history | `text_suggests_ad` |
+| Examination | Physical-examination text | `text_suggests_ad` |
+| ECG | First eligible ECG diagnostic text | `text_suggests_ad` |
+| Echocardiography | First eligible echocardiography conclusion and findings | `suggest_ad_on_echo`, `text_suggests_ad` |
 
-Module-prefixed forms such as `history__text_suggests_aas`,
-`exam__text_suggests_aas`, `ecg__text_suggests_aas`,
-`echo__text_suggests_aas`, and `echo__suggest_aas_on_echo` have the same
-documentation-only status. Legacy or normalized names retained in source
-schemas, including `text_suggests_ad`, `exam__text_suggests_ais`,
-`exam__text_suggests_aos`, and `echo__suggest_ad_on_echo`, are also outside
-downstream agent evidence. Allowed agent column sets are listed in
+Module-prefixed forms such as `history__text_suggests_ad`,
+`exam__text_suggests_ad`, `ecg__text_suggests_ad`,
+`echo__text_suggests_ad`, and `echo__suggest_ad_on_echo` have the same
+documentation-only status. Legacy or normalized diagnostic-summary aliases
+retained in source schemas are also outside downstream agent evidence. Allowed
+agent column sets are listed in
 `evidence_views.py`; rendered evidence packets use the public evidence
 interface in `curated_evidence.py`.

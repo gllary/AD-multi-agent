@@ -41,3 +41,10 @@ endpoint and the corresponding evidence tables. Pathway runs use the supplied
 scores and stage-bounded evidence packets; evaluation labels are retained only
 for metric calculation. Malformed, missing, timed-out, or stage-illegal LLM
 output uses the fixed fallback pathway after automatic retries.
+
+Permitted but unavailable fields are supplied as explicit `unknown` values.
+Specialist outputs must reproduce the server-provided risk score and band, cite
+only exact `field=value` references from their role-bounded packet, and name
+missing fields only when those fields were marked unknown. The coordinator sees
+validated current specialist records and bounded prior summaries; it does not
+receive raw evidence or unrestricted agent histories.

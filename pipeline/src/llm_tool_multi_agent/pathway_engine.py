@@ -7,6 +7,7 @@ import json
 from dataclasses import dataclass, field
 from typing import Any
 
+from .curated_evidence import evidence_contract_from_text
 from .deliberation import summarize_coordinator_history, summarize_specialist_history
 from .evidence_views import build_specialist_view
 from .llm_client import LLMClient, LLMOutputError
@@ -50,10 +51,21 @@ class PathwayResult:
     coordinator_outputs: list[dict[str, Any]] = field(default_factory=list)
 
 
-def _history_summary_blob(items: list[dict[str, Any]]) -> str:
-    if not items:
-        return "(none)"
-    return json.dumps(items, ensure_ascii=False, indent=2)
+def _coordinator_specialist_record(output: dict[str, Any]) -> dict[str, Any]:
+    """Expose only validated structured facts and decisions to the coordinator."""
+    fields = (
+        "agent_role",
+        "stage",
+        "risk_score_tool",
+        "risk_level_tool",
+        "supporting_evidence",
+        "counter_evidence",
+        "missing_critical_data",
+        "recommended_next_action",
+        "urgency",
+        "confidence",
+    )
+    return {field: output[field] for field in fields}
 
 
 def run_pathway_for_patient(
@@ -88,6 +100,7 @@ def run_pathway_for_patient(
         specialist_output_valid = True
         for role_key in STAGE_SPECIALISTS[current]:
             evidence = build_specialist_view(patient_id, current, role=role_key)
+            evidence_references, missing_fields = evidence_contract_from_text(evidence)
             user_spec = (
                 f"patient_id: {patient_id}\n"
                 f"stage: {current}\n"
@@ -98,8 +111,9 @@ def run_pathway_for_patient(
                 f"tool_discrete_risk_level: {rl_tool}\n"
                 f"specialist_role: {role_key}\n"
                 f"evidence_boundary: role-bounded structured view only\n"
-                f"prior_specialist_summary:\n{json.dumps(specialist_summary, ensure_ascii=False, indent=2)}\n"
-                f"prior_specialist_history:\n{_history_summary_blob(specialist_history)}\n"
+                f"prior_pathway_summary:\n{json.dumps(specialist_summary, ensure_ascii=False, indent=2)}\n"
+                f"allowed_evidence_references:\n{json.dumps(evidence_references, ensure_ascii=False)}\n"
+                f"allowed_missing_fields:\n{json.dumps(missing_fields, ensure_ascii=False)}\n"
             )
             if current == "CP3":
                 user_spec += (
@@ -114,6 +128,10 @@ def run_pathway_for_patient(
                     current,
                     user_spec,
                     allowed_actions,
+                    expected_risk_score=score,
+                    expected_risk_level=rl_tool,
+                    allowed_evidence_references=evidence_references,
+                    allowed_missing_fields=missing_fields,
                 )
                 output_valid = True
             except LLMOutputError:
@@ -139,13 +157,13 @@ def run_pathway_for_patient(
                 "action_threshold": a_thr,
             },
             "allowed_actions": allowed_actions,
-            "current_specialist_outputs": [
-                x["output"] for x in current_stage_specialists if x["output_valid"]
+            "current_specialist_records": [
+                _coordinator_specialist_record(x["output"])
+                for x in current_stage_specialists
+                if x["output_valid"]
             ],
-            "specialist_summary": specialist_summary,
-            "specialist_history": specialist_history,
-            "coordinator_summary": coordinator_summary,
-            "coordinator_history": coordinator_history,
+            "prior_specialist_summary": specialist_summary,
+            "prior_coordinator_summary": coordinator_summary,
         }
         if specialist_output_valid:
             try:

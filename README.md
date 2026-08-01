@@ -35,6 +35,7 @@ data/
   raw_data/development_cohort/
 FEATURE_DICTIONARY.md
 TEXT_FEATURE_EXTRACTION_PROMPTS.md
+MANUSCRIPT_REPOSITORY_MAPPING.md
 ```
 
 The released development-cohort directory contains three tables for the common
@@ -53,6 +54,11 @@ extraction outputs are documentation-only schema fields. Stage- and
 role-specific evidence packets are assembled by whitelists in
 `pipeline/src/llm_tool_multi_agent/evidence_views.py` and by the evidence
 renderer in `pipeline/src/llm_tool_multi_agent/curated_evidence.py`.
+Permitted but unavailable fields are rendered explicitly as `unknown`.
+Specialist evidence citations must reproduce an allowed `field=value` reference,
+and reported missing fields must come from that role-bounded unknown-field list.
+The coordinator receives validated current specialist records plus bounded prior
+summaries, rather than raw evidence or unrestricted output history.
 
 The released prompts and feature documentation are:
 
@@ -60,6 +66,9 @@ The released prompts and feature documentation are:
 - `TEXT_FEATURE_EXTRACTION_PROMPTS.md`
 - `pipeline/src/llm_tool_multi_agent/schemas.py`
 - `FEATURE_DICTIONARY.md`
+
+A direct manuscript-to-repository crosswalk is provided in
+[`MANUSCRIPT_REPOSITORY_MAPPING.md`](MANUSCRIPT_REPOSITORY_MAPPING.md).
 
 ## Installation
 
@@ -85,8 +94,9 @@ python pipeline/scripts/run_pathway.py \
 ```
 
 After automatic retries, unavailable output or output that fails strict schema,
-role/stage, or stage-legal action validation is passed to the deterministic
-governance layer, which applies the frozen fallback.
+role/stage, risk-state, evidence-reference, missing-field, or stage-legal action
+validation is passed to the deterministic governance layer, which applies the
+frozen fallback.
 
 ## Citation
 
