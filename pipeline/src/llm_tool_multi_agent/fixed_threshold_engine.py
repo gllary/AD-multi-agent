@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .quantitative_tools import load_policy, risk_level
-from .safety_layer import POSITIVE_ACTIONS, fixed_threshold_route
+from .safety_layer import ESCALATION_ACTIONS, fixed_threshold_route
 
 
 @dataclass
@@ -16,7 +16,7 @@ class FixedThresholdResult:
     final_stage: str
     final_score: float
     final_action: str
-    final_pred: int
+    assigned_escalation: int
     trace: list[dict[str, Any]] = field(default_factory=list)
 
 
@@ -66,7 +66,7 @@ def run_fixed_threshold_for_patient(
                 final_stage=current,
                 final_score=score,
                 final_action=action,
-                final_pred=int(action in POSITIVE_ACTIONS),
+                assigned_escalation=int(action in ESCALATION_ACTIONS),
                 trace=trace,
             )
         current = next_stage

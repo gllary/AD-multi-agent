@@ -12,8 +12,9 @@ schema-constrained prompts. PHI-stripped prompt
 templates and exact output schemas are provided in
 `TEXT_FEATURE_EXTRACTION_PROMPTS.md`.
 
-Missing values remain missing. Binary concept indicators use `1` for present,
-`0` for absent, and a missing value when the source record is insufficient.
+Missing values are not imputed. In the public CSV files, unavailable binary
+concept fields are encoded as the literal string `unknown`. Binary concept
+indicators otherwise use `1` for present and `0` for absent.
 
 ## CP1: History and Examination
 
@@ -33,6 +34,11 @@ Missing values remain missing. Binary concept indicators use `1` for present,
 | `exam__new_aortic_regurgitation_murmur` | New aortic-regurgitation murmur | binary concept |
 | `exam__neurologic_deficit` | Focal neurologic deficit | binary concept |
 | `exam__hypotension_or_shock` | Hypotension or shock | binary concept |
+
+For reported descriptive summaries, pulse or blood-pressure asymmetry was the
+composite of `exam__pulse_deficit` and `exam__bp_difference`. The composite was
+considered available when either component was positive or both components were
+documented absent; it was `unknown` otherwise.
 
 ## CP2: Laboratory Evidence
 

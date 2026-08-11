@@ -19,23 +19,31 @@ from llm_tool_multi_agent.quantitative_tools import (
 )
 
 
-def _metrics(labels: pd.Series, predictions: pd.Series) -> dict[str, float | int]:
-    labels = validate_binary_series(labels, "Metric labels")
-    predictions = validate_binary_series(predictions, "Metric predictions")
-    tp = int(((labels == 1) & (predictions == 1)).sum())
-    tn = int(((labels == 0) & (predictions == 0)).sum())
-    fp = int(((labels == 0) & (predictions == 1)).sum())
-    fn = int(((labels == 1) & (predictions == 0)).sum())
-    sensitivity = tp / (tp + fn) if tp + fn else float("nan")
-    specificity = tn / (tn + fp) if tn + fp else float("nan")
+def _allocation_summary(
+    labels: pd.Series,
+    assigned_escalation: pd.Series,
+) -> dict[str, float | int]:
+    labels = validate_binary_series(labels, "Reference-standard labels")
+    assigned_escalation = validate_binary_series(
+        assigned_escalation,
+        "Assigned-escalation indicators",
+    )
+    ad_positive_n = int((labels == 1).sum())
+    ad_negative_n = int((labels == 0).sum())
+    positive_escalation_n = int(((labels == 1) & (assigned_escalation == 1)).sum())
+    negative_escalation_n = int(((labels == 0) & (assigned_escalation == 1)).sum())
     return {
         "n": int(len(labels)),
-        "TP": tp,
-        "TN": tn,
-        "FP": fp,
-        "FN": fn,
-        "sensitivity": sensitivity,
-        "specificity": specificity,
+        "ad_positive_n": ad_positive_n,
+        "ad_negative_n": ad_negative_n,
+        "ad_positive_assigned_escalation_n": positive_escalation_n,
+        "ad_positive_assigned_escalation_rate": (
+            positive_escalation_n / ad_positive_n if ad_positive_n else float("nan")
+        ),
+        "ad_negative_assigned_escalation_n": negative_escalation_n,
+        "ad_negative_assigned_escalation_rate": (
+            negative_escalation_n / ad_negative_n if ad_negative_n else float("nan")
+        ),
     }
 
 
@@ -101,7 +109,7 @@ def main() -> None:
                 "final_stage": result.final_stage,
                 "final_score": result.final_score,
                 "final_action": result.final_action,
-                "final_pred": result.final_pred,
+                "assigned_escalation": result.assigned_escalation,
             }
         )
         traces.extend(result.trace)
@@ -116,7 +124,10 @@ def main() -> None:
     )
     (output_dir / "metrics.json").write_text(
         json.dumps(
-            _metrics(result_frame["label"], result_frame["final_pred"]),
+            _allocation_summary(
+                result_frame["label"],
+                result_frame["assigned_escalation"],
+            ),
             indent=2,
         ),
         encoding="utf-8",

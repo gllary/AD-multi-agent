@@ -76,6 +76,33 @@ fields from earlier checkpoints are not repeated; only bounded prior-decision
 summaries are carried forward. The fixed-threshold comparator uses the same
 frozen quantitative risk signals and thresholds without an LLM call.
 
+The complete model, prompt, routing, and governance configuration was finalized
+in December 2025 after development-cohort training and before any validation
+run. Qwen text extraction and all fixed-threshold, single-agent, and multi-agent
+pathway runs for the four cohorts occurred from January through July 2026.
+
+## Clinical Terminology and Output Interpretation
+
+This package performs **pathway allocation**, not autonomous diagnosis,
+disposition, or clinical triage. The evaluation-only `label` field stores the
+reference-standard aortic dissection status and is never supplied to a pathway.
+The terminal output `assigned_escalation` is `1` only when the accepted terminal
+action is `direct_cta` or `urgent_transfer`; it is not a diagnostic prediction.
+
+| Code action | Manuscript clinical term | Interpretation |
+|---|---|---|
+| `observe_or_reassess` | Clinician-overseen reassessment | Continued clinician review; not autonomous discharge or exclusion of aortic dissection |
+| `call_lab_agent` | Laboratory continuation | Advance to the laboratory checkpoint |
+| `call_ecg_agent` | ECG continuation | Advance to the ECG checkpoint |
+| `call_echo_agent` | Echocardiography continuation | Advance to the echocardiography checkpoint |
+| `direct_cta` | Direct CTA | Assign computed tomography angiography escalation |
+| `urgent_transfer` | Urgent specialist/transfer escalation | Assign urgent specialist review or transfer escalation |
+
+The exact archived prompts retain the phrase `pre-CTA triage` because those
+prompts are immutable study artifacts. In this release, that phrase refers to
+pre-CTA pathway allocation under clinician oversight and does not denote an
+autonomous diagnostic or disposition system.
+
 A direct manuscript-to-repository crosswalk is provided in
 [`MANUSCRIPT_REPOSITORY_MAPPING.md`](MANUSCRIPT_REPOSITORY_MAPPING.md).
 
@@ -108,6 +135,10 @@ validation is passed to the deterministic governance layer, which applies the
 frozen fallback. The audit trace records the attempt count, PHI-free failure
 categories, parser/schema/risk/evidence/action validation status, accepted
 action, and fallback or override reason.
+
+In the public development-cohort CSV files, unavailable binary concept fields
+are encoded as the literal string `unknown`; otherwise, `1` denotes present and
+`0` denotes absent.
 
 ## Citation
 

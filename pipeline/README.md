@@ -12,6 +12,10 @@ four 141-GB NVIDIA H20 GPUs. Text extraction used temperature 0 with thinking
 disabled. Pathway-agent calls used temperature 0.2, an 8,192-token server
 context limit, a 120-second request timeout, and no more than 3 attempts.
 
+The complete configuration was finalized in December 2025 after
+development-cohort training and before any validation run. Text extraction and
+all three pathway runs occurred from January through July 2026.
+
 Install from the repository root:
 
 ```bash
@@ -42,8 +46,15 @@ python pipeline/scripts/run_pathway.py \
 Use `--method single-agent` or `--method multi-agent` with a configured LLM
 endpoint and the corresponding evidence tables. Pathway runs use the supplied
 scores and stage-bounded evidence packets; evaluation labels are retained only
-for metric calculation. Malformed, missing, timed-out, or stage-illegal LLM
+for allocation-summary calculation. Malformed, missing, timed-out, or stage-illegal LLM
 output uses the fixed fallback pathway after automatic retries.
+
+`terminal_actions.csv` reports `assigned_escalation=1` only for the accepted
+terminal actions `direct_cta` and `urgent_transfer`; otherwise it reports `0`.
+This is a pathway-allocation indicator, not a diagnostic prediction. The
+evaluation-only `label` column is the reference-standard AD status and is not a
+pathway input. The complete code-action to manuscript-clinical-term mapping is
+provided in the repository root `README.md`.
 
 At each reached checkpoint, the single-agent comparator receives the union of
 the current checkpoint's code-whitelisted fields. The multi-agent pathway
@@ -54,7 +65,9 @@ evidence references, missing-field claims, schema validity, and stage-legal
 actions before deterministic governance. Audit traces retain PHI-free failure
 categories and validation status after each call sequence.
 
-Permitted but unavailable fields are supplied as explicit `unknown` values.
+Permitted but unavailable fields are supplied as explicit `unknown` values. In
+the public CSV files, unavailable binary concept fields use the literal string
+`unknown`; otherwise, `1` denotes present and `0` denotes absent.
 Specialist outputs must reproduce the server-provided risk score and band, cite
 only exact `field=value` references from their role-bounded packet, and name
 missing fields only when those fields were marked unknown. The coordinator sees

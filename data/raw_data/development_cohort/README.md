@@ -14,3 +14,7 @@ The `ID` column contains release-only pseudonymous identifiers (`D000001`,
 The three tables contain the same 1,010 release-only IDs. Patient-level CP3 ECG
 concept and measurement inputs remain under institutional governance. These
 files are the public CP1, CP2, and CP4 structured-data subset.
+
+Unavailable binary concept fields are encoded as the literal string `unknown`.
+Otherwise, `1` denotes present and `0` denotes absent; unavailable values were
+not imputed.

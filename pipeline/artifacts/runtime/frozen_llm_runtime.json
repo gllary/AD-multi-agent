@@ -34,7 +34,7 @@
     }
   },
   "execution_window": {
-    "start": "2026-03",
+    "start": "2026-01",
     "end": "2026-07",
     "scope": "Qwen text extraction and fixed-threshold, single-agent, and multi-agent pathway runs for all four cohorts"
   }

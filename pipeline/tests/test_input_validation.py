@@ -51,11 +51,11 @@ class ScoreTableValidationTest(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, r"finite values in \[0, 1\]"):
                     validate_score_table(frame)
 
-    def test_metrics_reject_nonbinary_inputs(self) -> None:
-        with self.assertRaisesRegex(ValueError, "Metric labels"):
-            validate_binary_series(pd.Series([0, 2]), "Metric labels")
-        with self.assertRaisesRegex(ValueError, "Metric predictions"):
-            validate_binary_series(pd.Series([0, -1]), "Metric predictions")
+    def test_allocation_summary_rejects_nonbinary_inputs(self) -> None:
+        with self.assertRaisesRegex(ValueError, "Reference-standard labels"):
+            validate_binary_series(pd.Series([0, 2]), "Reference-standard labels")
+        with self.assertRaisesRegex(ValueError, "Assigned-escalation indicators"):
+            validate_binary_series(pd.Series([0, -1]), "Assigned-escalation indicators")
 
 
 class RiskLevelValidationTest(unittest.TestCase):

@@ -15,7 +15,7 @@ from typing import Any
 
 from .quantitative_tools import risk_level
 
-POSITIVE_ACTIONS = frozenset({"direct_cta", "urgent_transfer"})
+ESCALATION_ACTIONS = frozenset({"direct_cta", "urgent_transfer"})
 TERMINAL_ACTIONS = frozenset({"observe_or_reassess", "direct_cta", "urgent_transfer"})
 
 CLINICAL_ACTIONS = frozenset(

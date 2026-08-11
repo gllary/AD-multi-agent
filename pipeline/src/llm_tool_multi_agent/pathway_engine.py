@@ -14,7 +14,7 @@ from .llm_client import LLMClient, LLMOutputError, validation_audit_record
 from .prompts import COORDINATOR_SYSTEM, SPECIALIST_PROMPTS
 from .quantitative_tools import load_policy, risk_level
 from .safety_layer import (
-    POSITIVE_ACTIONS,
+    ESCALATION_ACTIONS,
     action_to_next_stage,
     allowed_actions_for_stage,
     validate_coordinator_proposal,
@@ -45,7 +45,7 @@ class PathwayResult:
     final_stage: str
     final_score: float
     final_action: str
-    final_pred: int
+    assigned_escalation: int
     trace: list[dict[str, Any]] = field(default_factory=list)
     specialist_outputs: list[dict[str, Any]] = field(default_factory=list)
     coordinator_outputs: list[dict[str, Any]] = field(default_factory=list)
@@ -271,14 +271,14 @@ def run_pathway_for_patient(
         nxt = dec.final_next_stage
         if nxt is None:
             final_action = dec.final_action
-            final_pred = 1 if final_action in POSITIVE_ACTIONS else 0
+            assigned_escalation = 1 if final_action in ESCALATION_ACTIONS else 0
             return PathwayResult(
                 patient_id=patient_id,
                 visited_stages=" -> ".join(visited),
                 final_stage=current,
                 final_score=score,
                 final_action=final_action,
-                final_pred=final_pred,
+                assigned_escalation=assigned_escalation,
                 trace=trace,
                 specialist_outputs=specialists,
                 coordinator_outputs=coordinators,
