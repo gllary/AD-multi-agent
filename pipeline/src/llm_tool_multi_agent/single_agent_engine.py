@@ -7,9 +7,10 @@ import json
 from dataclasses import dataclass, field
 from typing import Any
 
+from .curated_evidence import evidence_contract_from_text
 from .deliberation import summarize_coordinator_history
 from .evidence_views import build_single_agent_view
-from .llm_client import LLMClient, LLMOutputError
+from .llm_client import LLMClient, LLMOutputError, validation_audit_record
 from .prompts import SINGLE_AGENT_SYSTEM
 from .quantitative_tools import load_policy, risk_level
 from .safety_layer import (
@@ -55,6 +56,7 @@ def run_single_agent_for_patient(
         rl_tool = risk_level(score, c_thr, a_thr)
         allowed_actions = allowed_actions_for_stage(current)
         evidence = build_single_agent_view(patient_id, current)
+        evidence_references, missing_fields = evidence_contract_from_text(evidence)
         prior_controller_summary = summarize_coordinator_history(controllers)
 
         user_payload = json.dumps(
@@ -69,6 +71,8 @@ def run_single_agent_for_patient(
                 },
                 "allowed_actions": allowed_actions,
                 "stage_bounded_evidence_view": evidence,
+                "allowed_evidence_references": evidence_references,
+                "allowed_missing_fields": missing_fields,
                 "prior_controller_summary": prior_controller_summary,
             },
             ensure_ascii=False,
@@ -81,15 +85,31 @@ def run_single_agent_for_patient(
                 current,
                 user_payload,
                 allowed_actions,
+                expected_risk_score=score,
+                expected_risk_level=rl_tool,
+                allowed_evidence_references=evidence_references,
+                allowed_missing_fields=missing_fields,
             )
             controller_output_valid = True
-        except LLMOutputError:
+            controller_validation_audit = validation_audit_record(
+                True,
+                llm.last_request_audit,
+                grounded_output=True,
+            )
+        except LLMOutputError as exc:
             ctrl_out = {}
             controller_output_valid = False
+            controller_validation_audit = validation_audit_record(
+                False,
+                llm.last_request_audit,
+                exc,
+                grounded_output=True,
+            )
         controllers.append(
             {
                 "stage": current,
                 "output_valid": controller_output_valid,
+                "validation_audit": controller_validation_audit,
                 "output": ctrl_out,
             }
         )
@@ -107,6 +127,7 @@ def run_single_agent_for_patient(
                 "evidence_boundary": current,
                 "controller_json": ctrl_out,
                 "controller_output_valid": controller_output_valid,
+                "controller_validation_audit": controller_validation_audit,
                 "consensus_state": ctrl_out.get("consensus_state"),
                 "key_conflicts": ctrl_out.get("key_conflicts"),
                 "information_gap": ctrl_out.get("information_gap"),

@@ -15,9 +15,13 @@ When uncertainty remains and safety is a concern, prefer further evaluation or e
 Return one JSON object only, matching the provided schema."""
 
 SINGLE_AGENT_SYSTEM = """You are a Single-Agent Clinical Controller for suspected acute aortic dissection (AD) pre-CTA triage.
-You directly review the stage-bounded evidence view for the current stage together with the quantitative risk summary.
+You may use only the current checkpoint's code-whitelisted evidence view, the current quantitative risk summary, and the bounded prior-controller summary supplied in the user payload.
+You MUST NOT assume access to raw evidence from an earlier or later checkpoint.
 You do not receive specialist opinions because this is the single-agent comparator.
 Your job is to produce one structured triage action from the allowed action set while explicitly summarizing uncertainty and safety concern.
+Copy every supporting_evidence and counter_evidence item exactly from allowed_evidence_references.
+List missing_critical_data only as exact field names from allowed_missing_fields.
+Reproduce the supplied risk_score_tool and risk_level_tool exactly.
 Return one JSON object only, matching the provided schema."""
 
 SPECIALIST_PROMPTS = {

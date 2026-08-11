@@ -1,15 +1,41 @@
 {
-  "model": "Qwen3-235B-A22B",
-  "serving_software": "vLLM",
-  "deployment": "private institutional server",
+  "model": {
+    "model_id": "Qwen/Qwen3-235B-A22B",
+    "release": "original official release",
+    "manufacturer": "Qwen Team, Alibaba Cloud",
+    "fine_tuned": false,
+    "quantized": false
+  },
+  "serving_software": {
+    "name": "vLLM",
+    "version": "0.8.5"
+  },
+  "deployment": {
+    "location": "private institutional server",
+    "interface": "local OpenAI-compatible endpoint",
+    "external_patient_data_transmission": false
+  },
   "accelerators": {
     "count": 4,
     "model": "NVIDIA H20",
     "memory_gb_each": 141
   },
-  "temperature": 0.2,
-  "maximum_context_length_tokens": 8192,
-  "request_timeout_seconds": 120,
-  "maximum_attempts_per_call": 3,
-  "external_patient_data_transmission": false
+  "runtime_profiles": {
+    "text_feature_extraction": {
+      "temperature": 0,
+      "thinking_enabled": false,
+      "output_contract": "single JSON object"
+    },
+    "pathway_agents": {
+      "temperature": 0.2,
+      "maximum_context_length_tokens": 8192,
+      "request_timeout_seconds": 120,
+      "maximum_attempts_per_call": 3
+    }
+  },
+  "execution_window": {
+    "start": "2026-03",
+    "end": "2026-07",
+    "scope": "Qwen text extraction and fixed-threshold, single-agent, and multi-agent pathway runs for all four cohorts"
+  }
 }

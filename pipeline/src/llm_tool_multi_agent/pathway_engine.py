@@ -10,7 +10,7 @@ from typing import Any
 from .curated_evidence import evidence_contract_from_text
 from .deliberation import summarize_coordinator_history, summarize_specialist_history
 from .evidence_views import build_specialist_view
-from .llm_client import LLMClient, LLMOutputError
+from .llm_client import LLMClient, LLMOutputError, validation_audit_record
 from .prompts import COORDINATOR_SYSTEM, SPECIALIST_PROMPTS
 from .quantitative_tools import load_policy, risk_level
 from .safety_layer import (
@@ -134,14 +134,26 @@ def run_pathway_for_patient(
                     allowed_missing_fields=missing_fields,
                 )
                 output_valid = True
-            except LLMOutputError:
+                output_validation_audit = validation_audit_record(
+                    True,
+                    llm.last_request_audit,
+                    grounded_output=True,
+                )
+            except LLMOutputError as exc:
                 spec_out = {}
                 output_valid = False
                 specialist_output_valid = False
+                output_validation_audit = validation_audit_record(
+                    False,
+                    llm.last_request_audit,
+                    exc,
+                    grounded_output=True,
+                )
             current_specialist = {
                 "stage": current,
                 "role": role_key,
                 "output_valid": output_valid,
+                "validation_audit": output_validation_audit,
                 "output": spec_out,
             }
             specialists.append(current_specialist)
@@ -174,16 +186,41 @@ def run_pathway_for_patient(
                     allowed_actions,
                 )
                 coordinator_output_valid = True
-            except LLMOutputError:
+                coordinator_validation_audit = validation_audit_record(
+                    True,
+                    llm.last_request_audit,
+                    grounded_output=False,
+                )
+            except LLMOutputError as exc:
                 coord_raw = {}
                 coordinator_output_valid = False
+                coordinator_validation_audit = validation_audit_record(
+                    False,
+                    llm.last_request_audit,
+                    exc,
+                    grounded_output=False,
+                )
         else:
             coord_raw = {}
             coordinator_output_valid = False
+            coordinator_validation_audit = {
+                "output_valid": False,
+                "attempt_count": 0,
+                "attempt_failure_categories": ["specialist_output_invalid"],
+                "final_failure_category": "specialist_output_invalid",
+                "parser_valid": None,
+                "schema_valid": None,
+                "role_stage_valid": None,
+                "risk_state_valid": None,
+                "evidence_references_valid": None,
+                "missing_fields_valid": None,
+                "proposed_action_valid": None,
+            }
         coordinators.append(
             {
                 "stage": current,
                 "output_valid": coordinator_output_valid,
+                "validation_audit": coordinator_validation_audit,
                 "output": coord_raw,
             }
         )
@@ -200,6 +237,14 @@ def run_pathway_for_patient(
                 ],
                 "specialist_output_valid": specialist_output_valid,
                 "coordinator_output_valid": coordinator_output_valid,
+                "specialist_validation_audits": [
+                    {
+                        "role": x["role"],
+                        **x["validation_audit"],
+                    }
+                    for x in current_stage_specialists
+                ],
+                "coordinator_validation_audit": coordinator_validation_audit,
                 "risk_score": score,
                 "risk_level": rl_tool,
                 "evidence_boundary": current,

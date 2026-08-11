@@ -7,7 +7,8 @@ risk-model or LLM input. CP1-CP4 scores provide the quantitative inputs to the
 public pathway package.
 
 Structured-concept fields from prespecified narrative sources use
-Qwen3-235B-A22B with fixed schema-constrained prompts. PHI-stripped prompt
+the original official `Qwen/Qwen3-235B-A22B` release with fixed
+schema-constrained prompts. PHI-stripped prompt
 templates and exact output schemas are provided in
 `TEXT_FEATURE_EXTRACTION_PROMPTS.md`.
 

@@ -4,7 +4,7 @@ This repository contains the research code, frozen prompt templates, policy
 thresholds, non-sensitive runtime configuration, and de-identified
 development-cohort structured inputs permitted for public release for:
 
-**Safety-governed multi-agent clinical decision support for pre-CTA pathway allocation in suspected aortic dissection**
+**Safety-Governed Multi-Agent Pathway Allocation for Suspected Aortic Dissection**
 
 ## Public Release Contents
 
@@ -67,6 +67,15 @@ The released prompts and feature documentation are:
 - `pipeline/src/llm_tool_multi_agent/schemas.py`
 - `FEATURE_DICTIONARY.md`
 
+The single-agent and multi-agent LLM pathways use the same current-checkpoint
+structured field pool, quantitative risk state, model configuration,
+stage-legal actions, and deterministic governance. The multi-agent pathway
+partitions that field pool across role-restricted specialists, whereas the
+single-agent comparator receives its current-checkpoint union directly. Raw
+fields from earlier checkpoints are not repeated; only bounded prior-decision
+summaries are carried forward. The fixed-threshold comparator uses the same
+frozen quantitative risk signals and thresholds without an LLM call.
+
 A direct manuscript-to-repository crosswalk is provided in
 [`MANUSCRIPT_REPOSITORY_MAPPING.md`](MANUSCRIPT_REPOSITORY_MAPPING.md).
 
@@ -96,7 +105,9 @@ python pipeline/scripts/run_pathway.py \
 After automatic retries, unavailable output or output that fails strict schema,
 role/stage, risk-state, evidence-reference, missing-field, or stage-legal action
 validation is passed to the deterministic governance layer, which applies the
-frozen fallback.
+frozen fallback. The audit trace records the attempt count, PHI-free failure
+categories, parser/schema/risk/evidence/action validation status, accepted
+action, and fallback or override reason.
 
 ## Citation
 

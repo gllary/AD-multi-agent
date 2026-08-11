@@ -85,6 +85,23 @@ class CoordinatorOutput(TypedDict, total=False):
     coordinator_summary: str
 
 
+class SingleAgentOutput(TypedDict, total=False):
+    current_stage: StageName
+    risk_score_tool: float
+    risk_level_tool: RiskLevel
+    supporting_evidence: list[str]
+    counter_evidence: list[str]
+    missing_critical_data: list[str]
+    consensus_state: ConsensusState
+    key_conflicts: list[str]
+    information_gap: list[str]
+    proposed_action: str
+    confidence: ConfidenceLevel
+    safety_concern: SafetyConcern
+    why_this_action_over_alternatives: str
+    coordinator_summary: str
+
+
 class SafetyReview(TypedDict, total=False):
     current_stage: StageName
     coordinator_action: str
@@ -127,6 +144,25 @@ REQUIRED_COORDINATOR_KEYS = (
     "why_this_action_over_alternatives",
     "coordinator_summary",
 )
+
+
+REQUIRED_SINGLE_AGENT_KEYS = (
+    "current_stage",
+    "risk_score_tool",
+    "risk_level_tool",
+    "supporting_evidence",
+    "counter_evidence",
+    "missing_critical_data",
+    "consensus_state",
+    "key_conflicts",
+    "information_gap",
+    "proposed_action",
+    "confidence",
+    "safety_concern",
+    "why_this_action_over_alternatives",
+    "coordinator_summary",
+)
+
 
 REQUIRED_SAFETY_KEYS = (
     "current_stage",
@@ -180,6 +216,37 @@ def coordinator_json_schema() -> dict[str, Any]:
         "required": list(REQUIRED_COORDINATOR_KEYS),
         "properties": {
             "current_stage": {"type": "string", "enum": list(STAGE_VALUES)},
+            "consensus_state": {
+                "type": "string",
+                "enum": list(CONSENSUS_STATE_VALUES),
+            },
+            "key_conflicts": _string_array_schema(),
+            "information_gap": _string_array_schema(),
+            "proposed_action": {"type": "string", "enum": list(ACTION_VALUES)},
+            "confidence": {"type": "string", "enum": list(CONFIDENCE_VALUES)},
+            "safety_concern": {"type": "string", "enum": list(SAFETY_CONCERN_VALUES)},
+            "why_this_action_over_alternatives": {"type": "string"},
+            "coordinator_summary": {"type": "string"},
+        },
+    }
+
+
+def single_agent_json_schema() -> dict[str, Any]:
+    """Schema for the grounded single-agent comparator output."""
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": list(REQUIRED_SINGLE_AGENT_KEYS),
+        "properties": {
+            "current_stage": {"type": "string", "enum": list(STAGE_VALUES)},
+            "risk_score_tool": {"type": "number", "minimum": 0, "maximum": 1},
+            "risk_level_tool": {
+                "type": "string",
+                "enum": list(RISK_LEVEL_VALUES),
+            },
+            "supporting_evidence": _string_array_schema(),
+            "counter_evidence": _string_array_schema(),
+            "missing_critical_data": _string_array_schema(),
             "consensus_state": {
                 "type": "string",
                 "enum": list(CONSENSUS_STATE_VALUES),

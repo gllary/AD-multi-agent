@@ -1,8 +1,9 @@
 # Frozen Text Feature Extraction Prompts
 
 This document provides PHI-stripped prompt templates for structured
-pre-CTA text fields. The configured extractor uses Qwen3-235B-A22B with
-temperature 0, thinking disabled, and JSON-object output. Templates contain
+pre-CTA text fields. The configured extractor uses the original official
+`Qwen/Qwen3-235B-A22B` release (Qwen Team, Alibaba Cloud) with temperature 0,
+thinking disabled, and JSON-object output. Templates contain
 placeholders rather than patient text. Credentials, private endpoints, patient
 identifiers, and patient narratives are outside this public file.
 

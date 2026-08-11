@@ -5,9 +5,12 @@ single-agent comparators, policy thresholds, and deterministic safety
 governance used in the reported research configuration. It uses patient-level
 CP1-CP4 risk scores as quantitative inputs.
 
-The evaluated LLM configuration used Qwen3-235B-A22B through a private
-OpenAI-compatible vLLM endpoint, temperature 0.2, an 8,192-token server context
-limit, and a 120-second request timeout.
+The evaluated LLM configuration used the original official
+`Qwen/Qwen3-235B-A22B` release (Qwen Team, Alibaba Cloud), without fine-tuning
+or quantization, through a private OpenAI-compatible vLLM 0.8.5 endpoint on
+four 141-GB NVIDIA H20 GPUs. Text extraction used temperature 0 with thinking
+disabled. Pathway-agent calls used temperature 0.2, an 8,192-token server
+context limit, a 120-second request timeout, and no more than 3 attempts.
 
 Install from the repository root:
 
@@ -41,6 +44,15 @@ endpoint and the corresponding evidence tables. Pathway runs use the supplied
 scores and stage-bounded evidence packets; evaluation labels are retained only
 for metric calculation. Malformed, missing, timed-out, or stage-illegal LLM
 output uses the fixed fallback pathway after automatic retries.
+
+At each reached checkpoint, the single-agent comparator receives the union of
+the current checkpoint's code-whitelisted fields. The multi-agent pathway
+partitions the same field pool across the stage-relevant specialists. Earlier
+raw fields are not repeated at CP3 or CP4; only bounded prior-decision
+summaries are carried forward. Both LLM pathways validate risk-state agreement,
+evidence references, missing-field claims, schema validity, and stage-legal
+actions before deterministic governance. Audit traces retain PHI-free failure
+categories and validation status after each call sequence.
 
 Permitted but unavailable fields are supplied as explicit `unknown` values.
 Specialist outputs must reproduce the server-provided risk score and band, cite

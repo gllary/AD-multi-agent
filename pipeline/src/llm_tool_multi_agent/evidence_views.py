@@ -175,20 +175,19 @@ def build_specialist_view(patient_id: str, stage: str, role: str | None = None) 
 
 
 def build_single_agent_view(patient_id: str, stage: str) -> str:
+    """Return the union of current-stage role-bounded evidence fields.
+
+    Earlier checkpoints are represented through the bounded controller summary
+    assembled by ``single_agent_engine`` rather than being repeated as raw
+    structured evidence. This preserves the same checkpoint information
+    boundary used by the multi-agent pathway.
+    """
     if stage == "CP1":
         return build_history_exam_view(patient_id)
     if stage == "CP2":
         return build_lab_view(patient_id)
     if stage == "CP3":
-        return "\n".join(
-            [
-                "Prior structured evidence:",
-                build_lab_view(patient_id),
-                "",
-                "CP3 ECG evidence:",
-                build_ecg_view(patient_id),
-            ]
-        )
+        return build_ecg_view(patient_id)
     if stage == "CP4":
-        return build_cp4_full_view(patient_id)
+        return build_echo_view(patient_id)
     raise ValueError(f"Unknown stage: {stage}")
