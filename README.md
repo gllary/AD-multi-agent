@@ -81,6 +81,20 @@ in December 2025 after development-cohort training and before any validation
 run. Qwen text extraction and all fixed-threshold, single-agent, and multi-agent
 pathway runs for the four cohorts occurred from January through July 2026.
 
+## Workup Reference-Standard Alignment
+
+The workup-validation cohort contained 15,109 patients, including 11,059
+provisional AD-negative patients before outcome adjudication. Retrospective
+30-day outcome ascertainment for all 11,059 provisional AD-negative patients
+was completed from September 17 through November 1, 2025. An AD diagnosis,
+AD-related death, or aortic intervention within 30 days of the index encounter
+triggered reclassification; 17 patients were reclassified after subsequent CTA
+confirmed AD, leaving 11,042 final AD-negative patients. Two physicians
+reviewed deidentified index-hospital records and telephone outcome-ascertainment
+materials, with discordant cases adjudicated by a senior physician. These
+validation-cohort records and outcome materials are not included in this public
+release.
+
 ## Clinical Terminology and Output Interpretation
 
 This package performs **pathway allocation**, not autonomous diagnosis,
