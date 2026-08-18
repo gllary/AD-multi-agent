@@ -1,7 +1,7 @@
 # Manuscript-to-Repository Mapping
 
-This table maps the method components described in the associated JAMA Network Open
-manuscript to the corresponding files in this public release. It is a file
+This table maps the method components described in the associated manuscript,
+*A Safety-Governed Multi-Agent Framework for Sequential Pathway Allocation in Suspected Aortic Dissection*, to the corresponding files in this public release. It is a file
 crosswalk, not a claim that controlled-access validation data are public.
 
 | Manuscript method component | Public release file or symbol | Public scope |
@@ -20,7 +20,7 @@ crosswalk, not a claim that controlled-access validation data are public.
 | Runtime configuration | `pipeline/src/llm_tool_multi_agent/config.py`; `pipeline/artifacts/runtime/frozen_llm_runtime.json` | Non-sensitive model-serving and inference settings |
 | Evaluation entry point | `pipeline/scripts/run_pathway.py` | Fixed-threshold, single-agent, and multi-agent execution interface with pathway-allocation outputs |
 | Released development inputs | `data/raw_data/development_cohort/` | De-identified CP1, CP2, and CP4 structured tables for the 1,010-patient development cohort |
-| Workup reference standard | Not released as patient-level data | The manuscript reports retrospective 30-day outcome ascertainment for 11,059 provisional AD-negative patients from September 17 through November 1, 2025; 17 were reclassified after subsequent CTA confirmed AD, leaving 11,042 final AD-negative patients |
+| Clinical-workflow reference standard | Not released as patient-level data | The manuscript reports retrospective 30-day outcome ascertainment for 11,059 provisional AD-negative patients from September 17 through November 1, 2025; 17 were reclassified after subsequent CTA confirmed AD, leaving 11,042 final AD-negative patients |
 
 External validation inputs, protected health information, raw narratives,
 patient-level LLM traces, and controlled-access hospital data are not included.
