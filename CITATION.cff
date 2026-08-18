@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "Safety-Governed Multi-Agent Pathway Allocation for Suspected Aortic Dissection"
+title: "A Safety-Governed Multi-Agent Framework for Sequential Pathway Allocation in Suspected Aortic Dissection"
 message: "If you use this software or the accompanying release materials, please cite the associated manuscript and this code release."
 type: software
 authors:
@@ -11,19 +11,15 @@ authors:
     given-names: Ying
   - family-names: Ren
     given-names: Linan
-  - family-names: Su
-    given-names: Yingjie
-  - family-names: Chai
-    given-names: Xiangping
   - family-names: Wang
     given-names: Jianxin
 repository-code: "https://github.com/gllary/AD-multi-agent"
 date-released: 2026-08-11
 license: MIT
-abstract: "Code and release materials for safety-governed multi-agent pathway allocation for suspected aortic dissection."
+abstract: "Code and release materials for a safety-governed multi-agent framework for sequential pathway allocation in suspected aortic dissection."
 preferred-citation:
   type: article
-  title: "Safety-Governed Multi-Agent Pathway Allocation for Suspected Aortic Dissection"
+  title: "A Safety-Governed Multi-Agent Framework for Sequential Pathway Allocation in Suspected Aortic Dissection"
   authors:
     - family-names: Guan
       given-names: Yuxia
@@ -33,10 +29,6 @@ preferred-citation:
       given-names: Ying
     - family-names: Ren
       given-names: Linan
-    - family-names: Su
-      given-names: Yingjie
-    - family-names: Chai
-      given-names: Xiangping
     - family-names: Wang
       given-names: Jianxin
   year: 2026
