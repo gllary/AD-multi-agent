@@ -4,7 +4,7 @@ This repository contains the research code, frozen prompt templates, policy
 thresholds, non-sensitive runtime configuration, and de-identified
 development-cohort structured inputs permitted for public release for:
 
-**Safety-Governed Multi-Agent Pathway Allocation for Suspected Aortic Dissection**
+**A Safety-Governed Multi-Agent Framework for Sequential Pathway Allocation in Suspected Aortic Dissection**
 
 ## Public Release Contents
 
@@ -81,9 +81,9 @@ in December 2025 after development-cohort training and before any validation
 run. Qwen text extraction and all fixed-threshold, single-agent, and multi-agent
 pathway runs for the four cohorts occurred from January through July 2026.
 
-## Workup Reference-Standard Alignment
+## Clinical-Workflow Reference-Standard Alignment
 
-The workup-validation cohort contained 15,109 patients, including 11,059
+The clinical-workflow validation cohort contained 15,109 patients, including 11,059
 provisional AD-negative patients before outcome adjudication. Retrospective
 30-day outcome ascertainment for all 11,059 provisional AD-negative patients
 was completed from September 17 through November 1, 2025. An AD diagnosis,
