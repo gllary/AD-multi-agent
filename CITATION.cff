@@ -7,10 +7,13 @@ authors:
     given-names: Yuxia
   - family-names: Guo
     given-names: Tuo
+    email: drgt96@csu.edu.cn
   - family-names: An
     given-names: Ying
+    email: anying@csu.edu.cn
   - family-names: Ren
     given-names: Linan
+    email: renlinan@csu.edu.cn
   - family-names: Wang
     given-names: Jianxin
 repository-code: "https://github.com/gllary/AD-multi-agent"
@@ -25,10 +28,13 @@ preferred-citation:
       given-names: Yuxia
     - family-names: Guo
       given-names: Tuo
+      email: drgt96@csu.edu.cn
     - family-names: An
       given-names: Ying
+      email: anying@csu.edu.cn
     - family-names: Ren
       given-names: Linan
+      email: renlinan@csu.edu.cn
     - family-names: Wang
       given-names: Jianxin
   year: 2026
