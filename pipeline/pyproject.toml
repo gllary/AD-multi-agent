@@ -11,9 +11,9 @@ requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
   { name = "Yuxia Guan" },
-  { name = "Tuo Guo", email = "drgt96@csu.edu.cn" },
-  { name = "Ying An", email = "anying@csu.edu.cn" },
-  { name = "Linan Ren", email = "renlinan@csu.edu.cn" },
+  { name = "Tuo Guo" },
+  { name = "Ying An" },
+  { name = "Linan Ren" },
   { name = "Jianxin Wang" },
 ]
 dependencies = [
