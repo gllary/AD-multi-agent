@@ -14,8 +14,6 @@ authors = [
   { name = "Tuo Guo" },
   { name = "Ying An" },
   { name = "Linan Ren" },
-  { name = "Yingjie Su" },
-  { name = "Xiangping Chai" },
   { name = "Jianxin Wang" },
 ]
 dependencies = [
