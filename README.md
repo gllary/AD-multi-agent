@@ -6,6 +6,8 @@ development-cohort structured inputs permitted for public release for:
 
 **A Safety-Governed Multi-Agent Framework for Sequential Pathway Allocation in Suspected Aortic Dissection**
 
+**Authors:** Yuxia Guan, Tuo Guo, Ying An, Linan Ren, and Jianxin Wang (corresponding author).
+
 ## Public Release Contents
 
 The repository includes:
@@ -83,9 +85,8 @@ pathway runs for the four cohorts occurred from January through July 2026.
 
 ## Clinical-Workflow Reference-Standard Alignment
 
-The clinical-workflow validation cohort contained 15,109 patients. Age and sex
-were available for all 15,109 patients. The cohort included 11,059 provisional
-AD-negative patients before outcome adjudication. Retrospective
+The clinical-workflow validation cohort contained 15,109 patients, including
+11,059 provisional AD-negative patients before outcome adjudication. Retrospective
 30-day outcome ascertainment for all 11,059 provisional AD-negative patients
 was completed from September 17 through November 1, 2025. An AD diagnosis,
 AD-related death, or aortic intervention within 30 days of the index encounter
