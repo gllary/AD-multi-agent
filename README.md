@@ -86,16 +86,18 @@ pathway runs for the four cohorts occurred from January through July 2026.
 ## Clinical-Workflow Reference-Standard Alignment
 
 The clinical-workflow validation cohort contained 15,109 patients, including
-11,059 provisional AD-negative patients before outcome adjudication. Retrospective
-30-day outcome ascertainment for all 11,059 provisional AD-negative patients
-was completed from September 17 through November 1, 2025. An AD diagnosis,
-AD-related death, or aortic intervention within 30 days of the index encounter
-triggered reclassification; 17 patients were reclassified after subsequent CTA
-confirmed AD, leaving 11,042 final AD-negative patients. Two physicians
-reviewed deidentified index-hospital records and telephone outcome-ascertainment
-materials, with discordant cases adjudicated by a senior physician. These
-validation-cohort records and outcome materials are not included in this public
-release.
+11,059 provisional AD-negative patients before outcome adjudication. Thirty-day
+outcome verification was incorporated for all 11,059 provisional AD-negative
+patients using available clinical records and follow-up information. Identification
+of an AD diagnosis, AD-related death, or aortic intervention within 30 days after
+the index encounter triggered reclassification. Seventeen patients were
+reclassified because subsequent CTA performed within 30 days confirmed AD,
+leaving 11,042 final AD-negative patients. Two physicians independently reviewed
+deidentified clinical records and available follow-up information. Agreement was
+98.5%. Discordant cases were adjudicated by a senior physician until consensus.
+The reviewers were blinded to quantitative risk scores, agent outputs, and pathway
+assignments. These validation-cohort records and outcome-verification information
+are not included in this public release.
 
 ## Clinical Terminology and Output Interpretation
 
